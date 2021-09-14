@@ -18,6 +18,8 @@ import pro.taskana.task.api.exceptions.TaskCommentNotFoundException;
 import pro.taskana.task.api.exceptions.TaskNotFoundException;
 import pro.taskana.task.api.models.TaskComment;
 import pro.taskana.task.internal.models.TaskCommentImpl;
+import pro.taskana.user.api.models.User;
+import pro.taskana.user.internal.UserMapper;
 
 class TaskCommentServiceImpl {
 
@@ -26,14 +28,17 @@ class TaskCommentServiceImpl {
   private final InternalTaskanaEngine taskanaEngine;
   private final TaskServiceImpl taskService;
   private final TaskCommentMapper taskCommentMapper;
+  private final UserMapper userMapper;
 
   TaskCommentServiceImpl(
       InternalTaskanaEngine taskanaEngine,
       TaskCommentMapper taskCommentMapper,
+      UserMapper userMapper,
       TaskServiceImpl taskService) {
     this.taskanaEngine = taskanaEngine;
     this.taskService = taskService;
     this.taskCommentMapper = taskCommentMapper;
+    this.userMapper = userMapper;
   }
 
   TaskComment newTaskComment(String taskId) {
@@ -149,13 +154,23 @@ class TaskCommentServiceImpl {
 
       taskService.getTask(taskId);
 
-      List<TaskComment> taskComments = new ArrayList<>(taskCommentMapper.findByTaskId(taskId));
+      List<TaskCommentImpl> taskComments = new ArrayList<>(taskCommentMapper.findByTaskId(taskId));
 
       if (taskComments.isEmpty() && LOGGER.isDebugEnabled()) {
         LOGGER.debug("getTaskComments() found no comments for the provided taskId");
       }
 
-      return taskComments;
+      if (taskanaEngine.getEngine().getConfiguration().getAddAdditionalUserInfo()) {
+        taskComments.forEach(
+            taskComment -> {
+              User creator = userMapper.findById(taskComment.getCreator());
+              if (creator != null) {
+                taskComment.setCreatorLongName(creator.getFullName());
+              }
+            });
+      }
+
+      return new ArrayList(taskComments);
 
     } finally {
       taskanaEngine.returnConnection();
@@ -178,6 +193,13 @@ class TaskCommentServiceImpl {
 
       if (result == null) {
         throw new TaskCommentNotFoundException(taskCommentId);
+      }
+
+      if (taskanaEngine.getEngine().getConfiguration().getAddAdditionalUserInfo()) {
+        User creator = userMapper.findById(result.getCreator());
+        if (creator != null) {
+          result.setCreatorLongName(creator.getFullName());
+        }
       }
 
       taskService.getTask(result.getTaskId());
