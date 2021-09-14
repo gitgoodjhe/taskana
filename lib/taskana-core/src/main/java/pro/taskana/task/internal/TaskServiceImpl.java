@@ -51,6 +51,7 @@ import pro.taskana.spi.history.internal.HistoryEventManager;
 import pro.taskana.spi.priority.internal.PriorityServiceManager;
 import pro.taskana.spi.task.internal.CreateTaskPreprocessorManager;
 import pro.taskana.task.api.CallbackState;
+import pro.taskana.task.api.TaskCommentQuery;
 import pro.taskana.task.api.TaskCustomField;
 import pro.taskana.task.api.TaskQuery;
 import pro.taskana.task.api.TaskService;
@@ -371,6 +372,11 @@ public class TaskServiceImpl implements TaskService {
   @Override
   public TaskQuery createTaskQuery() {
     return new TaskQueryImpl(taskanaEngine);
+  }
+
+  @Override
+  public TaskCommentQuery createTaskCommentQuery() {
+    return new TaskCommentQueryImpl(taskanaEngine);
   }
 
   @Override
