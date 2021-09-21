@@ -29,6 +29,7 @@ import pro.taskana.common.api.TaskanaRole;
 import pro.taskana.common.api.exceptions.InvalidArgumentException;
 import pro.taskana.common.api.exceptions.SystemException;
 import pro.taskana.common.rest.models.AccessIdRepresentationModel;
+import pro.taskana.user.rest.models.UserRepresentationModel;
 
 /** Class for Ldap access. */
 @Component
@@ -84,7 +85,51 @@ public class LdapClient {
     return getFirstPageOfaResultList(accessIds);
   }
 
-  public List<AccessIdRepresentationModel> searchUsersByNameOrAccessIdInUserRole(
+  public List<UserRepresentationModel> searchUsersByNameOrAccessIdInUserRole(
+      final String nameOrAccessId) throws InvalidArgumentException {
+
+    LOGGER.debug(
+        "entry to searchUsersByNameOrAccessIdInUserRoleGroups(nameOrAccessId = {}).",
+        nameOrAccessId);
+
+    isInitOrFail();
+    testMinSearchForLength(nameOrAccessId);
+
+    final OrFilter userDetailsOrFilter = new OrFilter();
+    userDetailsOrFilter.or(
+        new WhitespaceWildcardsFilter(getUserFirstnameAttribute(), nameOrAccessId));
+    userDetailsOrFilter.or(
+        new WhitespaceWildcardsFilter(getUserLastnameAttribute(), nameOrAccessId));
+    userDetailsOrFilter.or(
+        new WhitespaceWildcardsFilter(getUserFullnameAttribute(), nameOrAccessId));
+    userDetailsOrFilter.or(new WhitespaceWildcardsFilter(getUserIdAttribute(), nameOrAccessId));
+
+    Set<String> userGroups = taskanaEngineConfiguration.getRoleMap().get(TaskanaRole.USER);
+
+    final OrFilter groupMembershipOrFilter = new OrFilter();
+    userGroups.forEach(
+        group ->
+            groupMembershipOrFilter.or(new EqualsFilter(getUserMemberOfGroupAttribute(), group)));
+
+    final AndFilter andFilter = new AndFilter();
+    andFilter.and(userDetailsOrFilter);
+    andFilter.and(groupMembershipOrFilter);
+    andFilter.and(new EqualsFilter(getUserSearchFilterName(), getUserSearchFilterValue()));
+
+    final List<UserRepresentationModel> accessIds =
+        ldapTemplate.search(
+            getUserSearchBase(),
+            andFilter.encode(),
+            SearchControls.SUBTREE_SCOPE,
+            getLookUpUserInfoAttributesToReturn(),
+            new UserInfoContextMapper());
+    LOGGER.debug(
+        "exit from searchUsersByNameOrAccessIdInUserRoleGroups. Retrieved the following users: {}.",
+        accessIds);
+    return accessIds;
+  }
+
+  public List<AccessIdRepresentationModel> searchUsersByNameOrAccessIdInUserRole2(
       final String nameOrAccessId) throws InvalidArgumentException {
 
     LOGGER.debug(
@@ -349,6 +394,10 @@ public class LdapClient {
     return LdapSettings.TASKANA_LDAP_USER_LASTNAME_ATTRIBUTE.getValueFromEnv(env);
   }
 
+  public String getUserPhoneAttribute() {
+    return LdapSettings.TASKANA_LDAP_USER_PHONE_ATTRIBUTE.getValueFromEnv(env);
+  }
+
   public String getUserIdAttribute() {
     return LdapSettings.TASKANA_LDAP_USER_ID_ATTRIBUTE.getValueFromEnv(env);
   }
@@ -463,7 +512,13 @@ public class LdapClient {
 
   String[] getLookUpUserAttributesToReturn() {
     return new String[] {
-      getUserFirstnameAttribute(), getUserLastnameAttribute(), getUserIdAttribute()
+      getUserFirstnameAttribute(), getUserLastnameAttribute(), getUserIdAttribute(),getUserFullnameAttribute()
+    };
+  }
+
+  String[] getLookUpUserInfoAttributesToReturn() {
+    return new String[] {
+        getUserFirstnameAttribute(), getUserLastnameAttribute(), getUserIdAttribute(),getUserPhoneAttribute()
     };
   }
 
@@ -523,6 +578,21 @@ public class LdapClient {
       accessId.setAccessId(getDnFromContext(context)); // fully qualified dn
       accessId.setName(context.getStringAttribute(getGroupNameAttribute()));
       return accessId;
+    }
+  }
+
+  /** Context Mapper for user entries. */
+  class UserInfoContextMapper extends AbstractContextMapper<UserRepresentationModel> {
+
+    @Override
+    public UserRepresentationModel doMapFromContext(final DirContextOperations context) {
+      final UserRepresentationModel userRepresentationModel = new UserRepresentationModel();
+      userRepresentationModel.setUserId(context.getStringAttribute(getUserIdAttribute()));
+      userRepresentationModel.setFirstName(context.getStringAttribute(getUserFirstnameAttribute()));
+      userRepresentationModel.setLastName(context.getStringAttribute(getUserLastnameAttribute()));
+      userRepresentationModel.setPhone(context.getStringAttribute(getUserPhoneAttribute()));
+
+      return userRepresentationModel;
     }
   }
 

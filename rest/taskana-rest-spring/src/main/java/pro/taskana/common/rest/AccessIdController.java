@@ -15,6 +15,7 @@ import pro.taskana.common.api.exceptions.InvalidArgumentException;
 import pro.taskana.common.api.exceptions.NotAuthorizedException;
 import pro.taskana.common.rest.ldap.LdapClient;
 import pro.taskana.common.rest.models.AccessIdRepresentationModel;
+import pro.taskana.user.rest.models.UserRepresentationModel;
 
 /** Controller for Access Id validation. */
 @RestController
@@ -66,7 +67,7 @@ public class AccessIdController {
    * @title Search for Access Id (users) in TASKANA user role
    */
   @GetMapping(path = RestEndpoints.URL_USER)
-  public ResponseEntity<List<AccessIdRepresentationModel>> searchUsersByNameOrAccessIdForRole(
+  public ResponseEntity<List<UserRepresentationModel>> searchUsersByNameOrAccessIdForRole(
       @RequestParam("search-for") String nameOrAccessId, @RequestParam("role") String role)
       throws InvalidArgumentException, NotAuthorizedException {
     taskanaEngine.checkRoleMembership(
@@ -77,7 +78,7 @@ public class AccessIdController {
           String.format(
               "Requested users for not supported role %s.  Only role 'user' is supported'", role));
     }
-    List<AccessIdRepresentationModel> accessIdUsers =
+    List<UserRepresentationModel> accessIdUsers =
         ldapClient.searchUsersByNameOrAccessIdInUserRole(nameOrAccessId);
     return ResponseEntity.ok(accessIdUsers);
   }

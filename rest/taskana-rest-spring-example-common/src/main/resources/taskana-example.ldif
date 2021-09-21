@@ -108,6 +108,7 @@ description: desc
 memberOf: cn=ksc-users,cn=groups,OU=Test,O=TASKANA
 memberOf: cn=Organisationseinheit KSC 1,cn=Organisationseinheit KSC,cn=organisation,OU=Test,O=TASKANA
 uid: user-1-1
+phone: 01512345678
 sn: Mustermann
 ou: Organisationseinheit/Organisationseinheit KSC/Organisationseinheit KSC 1
 cn: Max Mustermann
