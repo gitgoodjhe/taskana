@@ -188,4 +188,12 @@ public class UserRepresentationModel extends RepresentationModel<UserRepresentat
         && Objects.equals(orgLevel1, other.orgLevel1)
         && Objects.equals(data, other.data);
   }
+
+  @Override
+  public String toString() {
+    return "UserRepresentationModel [userId="
+        + userId
+        + ", firstName="
+        + "]";
+  }
 }
