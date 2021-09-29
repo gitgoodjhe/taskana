@@ -11,11 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -28,7 +24,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 
 import pro.taskana.TaskanaEngineConfiguration;
-import pro.taskana.common.api.TaskanaRole;
 import pro.taskana.common.api.exceptions.SystemException;
 import pro.taskana.common.rest.models.AccessIdRepresentationModel;
 
@@ -92,7 +87,7 @@ class LdapClientTest {
         .containsExactly("user-1", "user-2", "user-4", null);
   }
 
-/*  @Test
+  /*  @Test
   void should_ReturnAllUsersAndMembersOfGroupsWithTaskanaUserRole() throws Exception {
 
     setUpEnvMock();
@@ -177,7 +172,10 @@ class LdapClientTest {
               {"taskana.ldap.userLastnameAttribute", "sn"},
               {"taskana.ldap.userFirstnameAttribute", "givenName"},
               {"taskana.ldap.userFullnameAttribute", "cn"},
-              {"taskana.ldap.userSearchFilterValue", "person"}
+              {"taskana.ldap.userSearchFilterValue", "person"},
+              {"taskana.ldap.userPhoneAttribute", "phoneNumber"},
+              {"taskana.ldap.userMobilePhoneAttribute", "mobileNumber"},
+              {"taskana.ldap.emailAttribute", "email"},
             })
         .forEach(
             strings ->

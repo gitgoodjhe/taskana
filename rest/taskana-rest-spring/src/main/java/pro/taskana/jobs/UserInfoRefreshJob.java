@@ -18,16 +18,16 @@ import pro.taskana.task.internal.jobs.helper.SqlConnectionRunner;
 import pro.taskana.user.api.exceptions.UserAlreadyExistException;
 import pro.taskana.user.api.models.User;
 
-public class UserRefreshJob extends AbstractTaskanaJob {
+public class UserInfoRefreshJob extends AbstractTaskanaJob {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserRefreshJob.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoRefreshJob.class);
   private final SqlConnectionRunner sqlConnectionRunner;
 
-  public UserRefreshJob(TaskanaEngine taskanaEngine) {
+  public UserInfoRefreshJob(TaskanaEngine taskanaEngine) {
     this(taskanaEngine, null, null);
   }
 
-  public UserRefreshJob(
+  public UserInfoRefreshJob(
       TaskanaEngine taskanaEngine,
       TaskanaTransactionProvider txProvider,
       ScheduledJob scheduledJob) {
@@ -38,21 +38,21 @@ public class UserRefreshJob extends AbstractTaskanaJob {
   }
 
   /**
-   * Initializes the {@linkplain UserRefreshJob} schedule. <br>
+   * Initializes the {@linkplain UserInfoRefreshJob} schedule. <br>
    * All scheduled jobs are cancelled/deleted and a new one is scheduled.
    *
    * @param taskanaEngine the TASKANA engine.
    */
   public static void initializeSchedule(TaskanaEngine taskanaEngine) {
     JobServiceImpl jobService = (JobServiceImpl) taskanaEngine.getJobService();
-    UserRefreshJob job = new UserRefreshJob(taskanaEngine);
+    UserInfoRefreshJob job = new UserInfoRefreshJob(taskanaEngine);
     jobService.deleteJobs(job.getType());
     job.scheduleNextJob();
   }
 
   @Override
   protected String getType() {
-    return UserRefreshJob.class.getName();
+    return UserInfoRefreshJob.class.getName();
   }
 
   @Override
@@ -65,6 +65,12 @@ public class UserRefreshJob extends AbstractTaskanaJob {
           ApplicationContextProvider.getApplicationContext()
               .getBean("ldapClient", LdapClient.class);
       List<User> users = ldapClient.searchUsersInUserRole();
+
+      System.out.println(taskanaEngineImpl.getConfiguration().getSchemaName());
+
+      String data = taskanaEngineImpl.getUserService().getUser(users.get(0).getId()+"ghgf").getData();
+
+      System.out.println("#################DATA" +data);
 
       if (!users.isEmpty()) {
         sqlConnectionRunner.runWithConnection(

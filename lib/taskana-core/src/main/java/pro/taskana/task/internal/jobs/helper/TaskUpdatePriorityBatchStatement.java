@@ -14,6 +14,7 @@ public class TaskUpdatePriorityBatchStatement {
   private final PreparedStatement preparedStatement;
 
   public TaskUpdatePriorityBatchStatement(Connection connection) throws SQLException {
+
     preparedStatement = connection.prepareStatement("update TASK set PRIORITY = ? where ID = ?");
   }
 

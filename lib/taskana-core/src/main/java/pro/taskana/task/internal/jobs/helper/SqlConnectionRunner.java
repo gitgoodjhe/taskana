@@ -33,6 +33,7 @@ public class SqlConnectionRunner {
    */
   public void runWithConnection(CheckedConsumer<Connection, SQLException> consumer) {
     try (Connection connection = getConnection()) {
+
       consumer.accept(connection);
     } catch (SQLException e) {
       throw new SystemException("SQL error while running low level SQL", e);

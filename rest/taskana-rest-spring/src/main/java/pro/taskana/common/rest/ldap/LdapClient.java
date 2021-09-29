@@ -137,8 +137,9 @@ public class LdapClient {
     final OrFilter userOrGroupMembershipOrFilter = new OrFilter();
     userGroupsOrUser.forEach(
         userOrGroup -> {
-          userOrGroupMembershipOrFilter.or(new EqualsFilter(getUserMemberOfGroupAttribute(), userOrGroup));
-          userOrGroupMembershipOrFilter.or(new EqualsFilter(getUserIdAttribute(),userOrGroup));
+          userOrGroupMembershipOrFilter.or(
+              new EqualsFilter(getUserMemberOfGroupAttribute(), userOrGroup));
+          userOrGroupMembershipOrFilter.or(new EqualsFilter(getUserIdAttribute(), userOrGroup));
         });
 
     final AndFilter andFilter = new AndFilter();
@@ -151,9 +152,7 @@ public class LdapClient {
             SearchControls.SUBTREE_SCOPE,
             getLookUpUserInfoAttributesToReturn(),
             new UserInfoContextMapper());
-    LOGGER.debug(
-        "exit from searchUsersInUserRole. Retrieved the following users: {}.",
-        users);
+    LOGGER.debug("exit from searchUsersInUserRole. Retrieved the following users: {}.", users);
 
     return users;
   }
@@ -379,8 +378,20 @@ public class LdapClient {
     return LdapSettings.TASKANA_LDAP_USER_LASTNAME_ATTRIBUTE.getValueFromEnv(env);
   }
 
+  public String getUserLongnameAttribute() {
+    return LdapSettings.TASKANA_LDAP_USER_LONGNAME_ATTRIBUTE.getValueFromEnv(env);
+  }
+
   public String getUserPhoneAttribute() {
     return LdapSettings.TASKANA_LDAP_USER_PHONE_ATTRIBUTE.getValueFromEnv(env);
+  }
+
+  public String getUserMobilePhoneAttribute() {
+    return LdapSettings.TASKANA_LDAP_USER_MOBILE_PHONE_ATTRIBUTE.getValueFromEnv(env);
+  }
+
+  public String getUserEmailAttribute() {
+    return LdapSettings.TASKANA_LDAP_USER_EMAIL_ATTRIBUTE.getValueFromEnv(env);
   }
 
   public String getUserIdAttribute() {
@@ -506,13 +517,14 @@ public class LdapClient {
 
   String[] getLookUpUserInfoAttributesToReturn() {
     return new String[] {
-        getUserIdAttribute(),
-        getUserFirstnameAttribute(),
-        getUserLastnameAttribute(),
-        getUserPhoneAttribute(),
-        getUserMobilePhoneAttribute(),
-
-
+      getUserIdAttribute(),
+      getUserFirstnameAttribute(),
+      getUserLastnameAttribute(),
+      getUserFullnameAttribute(),
+      getUserLongnameAttribute(),
+      getUserPhoneAttribute(),
+      getUserMobilePhoneAttribute(),
+      getUserEmailAttribute()
     };
   }
 
@@ -584,7 +596,11 @@ public class LdapClient {
       userRepresentationModel.setId(context.getStringAttribute(getUserIdAttribute()));
       userRepresentationModel.setFirstName(context.getStringAttribute(getUserFirstnameAttribute()));
       userRepresentationModel.setLastName(context.getStringAttribute(getUserLastnameAttribute()));
+      userRepresentationModel.setFullName(context.getStringAttribute(getUserFullnameAttribute()));
+      userRepresentationModel.setLongName(context.getStringAttribute(getUserLongnameAttribute()));
       userRepresentationModel.setPhone(context.getStringAttribute(getUserPhoneAttribute()));
+      userRepresentationModel.setMobilePhone(context.getStringAttribute(getUserEmailAttribute()));
+      userRepresentationModel.setEmail(context.getStringAttribute(getUserEmailAttribute()));
 
       return userRepresentationModel;
     }
