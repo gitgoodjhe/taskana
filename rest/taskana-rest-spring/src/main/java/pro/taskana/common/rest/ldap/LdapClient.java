@@ -152,6 +152,7 @@ public class LdapClient {
             SearchControls.SUBTREE_SCOPE,
             getLookUpUserInfoAttributesToReturn(),
             new UserInfoContextMapper());
+
     LOGGER.debug("exit from searchUsersInUserRole. Retrieved the following users: {}.", users);
 
     return users;
@@ -587,22 +588,22 @@ public class LdapClient {
     }
   }
 
-  /** Context Mapper for user entries. */
+  /** Context Mapper for user info entries. */
   class UserInfoContextMapper extends AbstractContextMapper<User> {
 
     @Override
     public User doMapFromContext(final DirContextOperations context) {
-      final User userRepresentationModel = new UserImpl();
-      userRepresentationModel.setId(context.getStringAttribute(getUserIdAttribute()));
-      userRepresentationModel.setFirstName(context.getStringAttribute(getUserFirstnameAttribute()));
-      userRepresentationModel.setLastName(context.getStringAttribute(getUserLastnameAttribute()));
-      userRepresentationModel.setFullName(context.getStringAttribute(getUserFullnameAttribute()));
-      userRepresentationModel.setLongName(context.getStringAttribute(getUserLongnameAttribute()));
-      userRepresentationModel.setPhone(context.getStringAttribute(getUserPhoneAttribute()));
-      userRepresentationModel.setMobilePhone(context.getStringAttribute(getUserEmailAttribute()));
-      userRepresentationModel.setEmail(context.getStringAttribute(getUserEmailAttribute()));
+      final User user = new UserImpl();
+      user.setId(context.getStringAttribute(getUserIdAttribute()));
+      user.setFirstName(context.getStringAttribute(getUserFirstnameAttribute()));
+      user.setLastName(context.getStringAttribute(getUserLastnameAttribute()));
+      user.setFullName(context.getStringAttribute(getUserFullnameAttribute()));
+      user.setLongName(context.getStringAttribute(getUserLongnameAttribute()));
+      user.setPhone(context.getStringAttribute(getUserPhoneAttribute()));
+      user.setMobilePhone(context.getStringAttribute(getUserEmailAttribute()));
+      user.setEmail(context.getStringAttribute(getUserEmailAttribute()));
 
-      return userRepresentationModel;
+      return user;
     }
   }
 

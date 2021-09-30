@@ -16,12 +16,15 @@ import pro.taskana.common.internal.transaction.TaskanaTransactionProvider;
 import pro.taskana.common.rest.ldap.LdapClient;
 import pro.taskana.task.internal.jobs.helper.SqlConnectionRunner;
 import pro.taskana.user.api.exceptions.UserAlreadyExistException;
+import pro.taskana.user.api.exceptions.UserNotFoundException;
 import pro.taskana.user.api.models.User;
 
 public class UserInfoRefreshJob extends AbstractTaskanaJob {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoRefreshJob.class);
   private final SqlConnectionRunner sqlConnectionRunner;
+  private final LdapClient ldapClient =
+      ApplicationContextProvider.getApplicationContext().getBean("ldapClient", LdapClient.class);
 
   public UserInfoRefreshJob(TaskanaEngine taskanaEngine) {
     this(taskanaEngine, null, null);
@@ -61,42 +64,63 @@ public class UserInfoRefreshJob extends AbstractTaskanaJob {
 
     try {
 
-      LdapClient ldapClient =
-          ApplicationContextProvider.getApplicationContext()
-              .getBean("ldapClient", LdapClient.class);
       List<User> users = ldapClient.searchUsersInUserRole();
 
-      System.out.println(taskanaEngineImpl.getConfiguration().getSchemaName());
+      addExistingConfigurationDataToUsers(users);
 
-      String data = taskanaEngineImpl.getUserService().getUser(users.get(0).getId()+"ghgf").getData();
+      clearExistingUsers();
 
-      System.out.println("#################DATA" +data);
+      insertNewUsers(users);
 
-      if (!users.isEmpty()) {
-        sqlConnectionRunner.runWithConnection(
-            connection -> {
-              String schema = taskanaEngineImpl.getConfiguration().getSchemaName();
-              String sql = "DELETE FROM " + schema + ".USER_INFO";
-              PreparedStatement statement = connection.prepareStatement(sql);
-              statement.execute();
-            });
+      LOGGER.info("Job to refresh all user info has finished.");
 
-        users.forEach(
-            user -> {
-              try {
-                taskanaEngineImpl.getUserService().createUser(user);
-              } catch (InvalidArgumentException e) {
-                e.printStackTrace();
-              } catch (NotAuthorizedException e) {
-                e.printStackTrace();
-              } catch (UserAlreadyExistException e) {
-                e.printStackTrace();
-              }
-            });
-        LOGGER.info("Job to refresh all user info has finished.");
-      }
     } catch (Exception e) {
       throw new SystemException("Error while processing UserRefreshJob.", e);
     }
+  }
+
+  private void clearExistingUsers() {
+
+    sqlConnectionRunner.runWithConnection(
+        connection -> {
+          String sql = "DELETE FROM USER_INFO";
+          PreparedStatement statement = connection.prepareStatement(sql);
+          statement.execute();
+
+          if (!connection.getAutoCommit()) {
+            connection.commit();
+          }
+        });
+  }
+
+  private void insertNewUsers(List<User> users) {
+
+    users.forEach(
+        user -> {
+          try {
+            taskanaEngineImpl.getUserService().createUser(user);
+          } catch (InvalidArgumentException
+              | NotAuthorizedException
+              | UserAlreadyExistException e) {
+            throw new SystemException("Caught Exception while trying to insert new User", e);
+          }
+        });
+  }
+
+  private void addExistingConfigurationDataToUsers(List<User> users) {
+
+    users.forEach(
+        user -> {
+          try {
+            user.setData(taskanaEngineImpl.getUserService().getUser(user.getId()).getData());
+          } catch (UserNotFoundException e) {
+            if (LOGGER.isDebugEnabled()) {
+              LOGGER.debug(
+                  String.format(
+                      "Failed to fetch configuration data for User with ID '%s' because it doesn't exist"),
+                  user.getId());
+            }
+          }
+        });
   }
 }

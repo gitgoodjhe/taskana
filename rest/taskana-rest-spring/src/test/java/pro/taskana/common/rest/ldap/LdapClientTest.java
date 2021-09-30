@@ -172,6 +172,7 @@ class LdapClientTest {
               {"taskana.ldap.userLastnameAttribute", "sn"},
               {"taskana.ldap.userFirstnameAttribute", "givenName"},
               {"taskana.ldap.userFullnameAttribute", "cn"},
+              {"taskana.ldap.userLongnameAttribute", "ln"},
               {"taskana.ldap.userSearchFilterValue", "person"},
               {"taskana.ldap.userPhoneAttribute", "phoneNumber"},
               {"taskana.ldap.userMobilePhoneAttribute", "mobileNumber"},

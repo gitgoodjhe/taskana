@@ -62,9 +62,11 @@ public class TaskanaEngineConfiguration {
   private static final String TASKANA_JOB_PRIORITY_BATCHSIZE = "taskana.jobs.priority.batchSize";
   private static final String TASKANA_JOB_PRIORITY_RUN_EVERY = "taskana.jobs.priority.runEvery";
   private static final String TASKANA_JOB_PRIORITY_FIRST_RUN = "taskana.jobs.priority.firstRunAt";
-  private static final String TASKANA_JOB_USER_REFRESH_FIRST_RUN = "taskana.jobs.user.refresh.firstRunAt";
+  private static final String TASKANA_JOB_USER_REFRESH_FIRST_RUN =
+      "taskana.jobs.user.refresh.firstRunAt";
   private static final String TASKANA_JOB_PRIORITY_ACTIVE = "taskana.jobs.priority.active";
-  private static final String TASKANA_JOB_USER_REFRESH_RUN_EVERY = "taskana.jobs.user.refresh.runEvery";
+  private static final String TASKANA_JOB_USER_REFRESH_RUN_EVERY =
+      "taskana.jobs.user.refresh.runEvery";
   private static final String TASKANA_DOMAINS_PROPERTY = "taskana.domains";
   private static final String TASKANA_CLASSIFICATION_TYPES_PROPERTY =
       "taskana.classification.types";
@@ -121,7 +123,6 @@ public class TaskanaEngineConfiguration {
 
   private Duration userRefreshJobRunEvery = Duration.parse("PT10S");
   private Instant userRefreshJobFirstRun = Instant.parse("2018-01-01T22:00:00Z");
-
 
   public TaskanaEngineConfiguration(
       DataSource dataSource, boolean useManagedTransactions, String schemaName) {
