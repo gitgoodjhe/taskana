@@ -121,8 +121,8 @@ public class TaskanaEngineConfiguration {
   private Duration priorityJobRunEvery = Duration.parse("P1D");
   private boolean priorityJobActive = false;
 
-  private Duration userRefreshJobRunEvery = Duration.parse("PT10S");
-  private Instant userRefreshJobFirstRun = Instant.parse("2018-01-01T22:00:00Z");
+  private Duration userRefreshJobRunEvery = Duration.parse("P1D");
+  private Instant userRefreshJobFirstRun = Instant.parse("2018-01-01T23:00:00Z");
 
   public TaskanaEngineConfiguration(
       DataSource dataSource, boolean useManagedTransactions, String schemaName) {
