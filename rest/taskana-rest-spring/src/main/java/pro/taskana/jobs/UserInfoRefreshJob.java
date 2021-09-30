@@ -23,8 +23,6 @@ public class UserInfoRefreshJob extends AbstractTaskanaJob {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoRefreshJob.class);
   private final SqlConnectionRunner sqlConnectionRunner;
-  private final LdapClient ldapClient =
-      ApplicationContextProvider.getApplicationContext().getBean("ldapClient", LdapClient.class);
 
   public UserInfoRefreshJob(TaskanaEngine taskanaEngine) {
     this(taskanaEngine, null, null);
@@ -61,6 +59,9 @@ public class UserInfoRefreshJob extends AbstractTaskanaJob {
   @Override
   protected void execute() {
     LOGGER.info("Running job to refresh all user info");
+
+    LdapClient ldapClient =
+        ApplicationContextProvider.getApplicationContext().getBean("ldapClient", LdapClient.class);
 
     try {
 
