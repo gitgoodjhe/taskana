@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -43,6 +44,7 @@ import pro.taskana.common.test.security.WithAccessId;
 import pro.taskana.task.api.TaskCustomField;
 import pro.taskana.task.api.TaskQuery;
 import pro.taskana.task.api.TaskQueryColumnName;
+import pro.taskana.task.api.TaskState;
 import pro.taskana.task.api.models.Attachment;
 import pro.taskana.task.api.models.AttachmentSummary;
 import pro.taskana.task.api.models.ObjectReference;
@@ -163,18 +165,25 @@ class QueryTasksAccTest extends AbstractAccTest {
   @Test
   void should_OrderByOwnerLongName_When_QueryingTask() {
     taskanaEngineConfiguration.setLongNameIncludedInQuery(false);
-    List<TaskSummary> tasks = taskService.createTaskQuery().orderByOwnerLongName(ASCENDING).list();
-    assertThat(tasks)
-        .hasSize(88)
-        .extracting(TaskSummary::getOwnerLongName)
-        .extracting(Objects::nonNull)
-        .isSorted();
+    List<TaskSummary> tasks =
+        taskService
+            .createTaskQuery()
+            .stateIn(TaskState.CLAIMED)
+            .ownerNotIn("user-b-1")
+            .orderByOwnerLongName(ASCENDING)
+            .list();
+    assertThat(tasks).extracting(TaskSummary::getOwnerLongName).hasSize(17).isSorted();
 
-    tasks = taskService.createTaskQuery().orderByOwnerLongName(DESCENDING).list();
+    tasks =
+        taskService
+            .createTaskQuery()
+            .stateIn(TaskState.CLAIMED)
+            .ownerNotIn("user-b-1")
+            .orderByOwnerLongName(DESCENDING)
+            .list();
     assertThat(tasks)
-        .hasSize(88)
+        .hasSize(17)
         .extracting(TaskSummary::getOwnerLongName)
-        .extracting(Objects::nonNull)
         .isSortedAccordingTo(Comparator.reverseOrder());
   }
 
@@ -183,19 +192,24 @@ class QueryTasksAccTest extends AbstractAccTest {
   void should_ListValues_For_OwnerLongName() {
     taskanaEngineConfiguration.setLongNameIncludedInQuery(false);
     List<String> longNames =
-        taskService.createTaskQuery().listValues(TaskQueryColumnName.OWNER_LONG_NAME, ASCENDING);
+        taskService.createTaskQuery().listValues(TaskQueryColumnName.OWNER_LONG_NAME, ASCENDING)
+            .stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     assertThat(longNames)
-        .hasSize(3)
-        .contains("Mustermann, Max - (user-1-1)")
-        .extracting(Objects::nonNull)
-        .isSorted();
+        .hasSize(2)
+        .isSorted()
+        .containsExactly("Eifrig, Elena - (user-1-2)", "Mustermann, Max - (user-1-1)");
 
     longNames =
-        taskService.createTaskQuery().listValues(TaskQueryColumnName.OWNER_LONG_NAME, DESCENDING);
+        taskService.createTaskQuery().listValues(TaskQueryColumnName.OWNER_LONG_NAME, DESCENDING)
+            .stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    ;
     assertThat(longNames)
-        .hasSize(3)
-        .contains("Mustermann, Max - (user-1-1)")
-        .extracting(Objects::nonNull)
+        .hasSize(2)
+        .contains("Mustermann, Max - (user-1-1)", "Eifrig, Elena - (user-1-2)")
         .isSortedAccordingTo(Comparator.reverseOrder());
   }
 
