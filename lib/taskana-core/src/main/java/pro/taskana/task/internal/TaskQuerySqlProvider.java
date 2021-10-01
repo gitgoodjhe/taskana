@@ -285,7 +285,8 @@ public class TaskQuerySqlProvider {
         + "<if test=\"addAttachmentColumnsToSelectClauseForOrdering\">"
         + ", ACLASSIFICATION_ID, ACLASSIFICATION_KEY, CHANNEL, REF_VALUE, ARECEIVED"
         + "</if>"
-        + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, WNAME</if>";
+        + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, WNAME</if>"
+        + "<if test=\"includeLongName\">, ULONG_NAME </if>";
   }
 
   private static String checkForAuthorization() {

@@ -146,7 +146,7 @@ public class QueryTaskCommentAccTest extends AbstractAccTest {
   @Test
   void should_FilterTaskComments_For_CreatorLike() {
     List<TaskComment> comments = taskService.createTaskCommentQuery().creatorLike("%1-1%").list();
-    assertThat(comments).hasSize(6);
+    assertThat(comments).hasSize(10);
   }
 
   @WithAccessId(user = "admin")
@@ -177,17 +177,17 @@ public class QueryTaskCommentAccTest extends AbstractAccTest {
   void should_FilterTaskComments_For_CreatorNotLike() {
     List<TaskComment> comments =
         taskService.createTaskCommentQuery().creatorNotLike("%1-1%").list();
-    assertThat(comments).hasSize(7);
+    assertThat(comments).hasSize(3);
   }
 
   @WithAccessId(user = "admin")
   @Test
   void should_ReturnCountOfEvents_When_UsingCountMethod() {
     long count = taskService.createTaskCommentQuery().creatorIn("user-1-1").count();
-    assertThat(count).isEqualTo(6);
+    assertThat(count).isEqualTo(10);
 
     count = taskService.createTaskCommentQuery().creatorNotIn("user-1-1").count();
-    assertThat(count).isEqualTo(7);
+    assertThat(count).isEqualTo(3);
 
     count = taskService.createTaskCommentQuery().count();
     assertThat(count).isEqualTo(13);
