@@ -19,7 +19,8 @@ public interface TaskHistoryQueryMapper {
           + "<if test=\"includeLongName\">, u.LONG_NAME AS USER_LONG_NAME, o.LONG_NAME AS TASK_OWNER_LONG_NAME </if>"
           + "FROM TASK_HISTORY_EVENT t "
           + "<if test=\"includeLongName\">"
-          + "LEFT JOIN USER_INFO AS u ON t.USER_ID = u.USER_ID AND t.TASK_OWNER = u.USER_ID "
+          + "LEFT JOIN USER_INFO AS u ON t.USER_ID = u.USER_ID "
+          + "LEFT JOIN USER_INFO AS o ON TASK_OWNER = o.USER_ID "
           + "</if>"
           + "<where>"
           // IN-Queries
