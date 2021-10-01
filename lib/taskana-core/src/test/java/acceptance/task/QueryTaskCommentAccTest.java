@@ -19,7 +19,7 @@ import pro.taskana.task.api.models.TaskComment;
 
 /** Test for TaskComment queries. */
 @ExtendWith(JaasExtension.class)
-public class QueryTaskCommentAccTest extends AbstractAccTest {
+class QueryTaskCommentAccTest extends AbstractAccTest {
 
   @WithAccessId(user = "admin")
   @Test
@@ -324,7 +324,7 @@ public class QueryTaskCommentAccTest extends AbstractAccTest {
             .list();
 
     assertThat(taskComments).hasSize(1);
-    assertThat(taskComments.get(0)).extracting(TaskComment::getCreatorLongName).isEqualTo(null);
+    assertThat(taskComments.get(0)).extracting(TaskComment::getCreatorLongName).isNull();
   }
 
   @WithAccessId(user = "admin")
@@ -338,6 +338,6 @@ public class QueryTaskCommentAccTest extends AbstractAccTest {
             .list();
 
     assertThat(taskComments).hasSize(1);
-    assertThat(taskComments.get(0)).extracting(TaskComment::getCreatorLongName).isEqualTo(null);
+    assertThat(taskComments.get(0)).extracting(TaskComment::getCreatorLongName).isNull();
   }
 }

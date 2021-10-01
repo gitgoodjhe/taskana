@@ -503,7 +503,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
     assertThat(taskHistoryEvents).hasSize(1);
     assertThat(taskHistoryEvents.get(0))
         .extracting(TaskHistoryEvent::getUserLongName)
-        .isEqualTo(null);
+        .isNull();
   }
 
   @WithAccessId(user = "user-1-1")
@@ -519,7 +519,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
     assertThat(taskHistoryEvents).hasSize(1);
     assertThat(taskHistoryEvents.get(0))
         .extracting(TaskHistoryEvent::getTaskOwnerLongName)
-        .isEqualTo(null);
+        .isNull();
   }
 
   @WithAccessId(user = "user-1-1")
@@ -535,6 +535,6 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
     assertThat(taskHistoryEvents).hasSize(1);
     assertThat(taskHistoryEvents.get(0))
         .extracting(TaskHistoryEvent::getUserLongName)
-        .isEqualTo(null);
+        .isNull();
   }
 }

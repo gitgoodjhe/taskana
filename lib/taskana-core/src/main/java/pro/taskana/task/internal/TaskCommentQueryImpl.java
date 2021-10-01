@@ -17,8 +17,6 @@ import pro.taskana.workbasket.internal.WorkbasketQueryImpl;
 /** TaskCommentQuery for generating dynamic sql. */
 public class TaskCommentQueryImpl implements TaskCommentQuery {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TaskCommentQueryImpl.class);
-
   private static final String LINK_TO_MAPPER =
       "pro.taskana.task.internal.TaskCommentQueryMapper.queryTaskComments";
 

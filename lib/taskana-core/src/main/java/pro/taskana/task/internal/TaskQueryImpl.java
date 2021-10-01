@@ -1272,6 +1272,10 @@ public class TaskQueryImpl implements TaskQuery {
     return ownerLongNameLike;
   }
 
+  public String[] getOwnerLongNameNotLike() {
+    return ownerLongNameNotLike;
+  }
+
   public Boolean getIsRead() {
     return isRead;
   }
