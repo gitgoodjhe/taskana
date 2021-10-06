@@ -10,7 +10,7 @@ public enum TaskHistoryQueryColumnName implements QueryColumnName {
   TASK_ID("task_id"),
   EVENT_TYPE("event_type"),
   CREATED("created"),
-  USER_ID("t.user_id"),
+  USER_ID("user_id"),
   USER_LONG_NAME("u.long_name"),
   DOMAIN("domain"),
   WORKBASKET_KEY("workbasket_key"),

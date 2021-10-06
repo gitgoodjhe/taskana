@@ -266,13 +266,6 @@ public class TaskHistoryQueryImpl implements TaskHistoryQuery {
     return custom4Like;
   }
 
-  public boolean isJoinWithUserInfo() {
-    return joinWithUserInfo;
-  }
-
-  public void setJoinWithUserInfo(boolean joinWithUserInfo) {
-    this.joinWithUserInfo = joinWithUserInfo;
-  }
 
   @Override
   public TaskHistoryQuery idIn(String... idIn) {

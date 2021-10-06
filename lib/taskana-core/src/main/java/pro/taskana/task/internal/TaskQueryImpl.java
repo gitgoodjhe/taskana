@@ -1338,14 +1338,6 @@ public class TaskQueryImpl implements TaskQuery {
 
   // endregion
 
-  public boolean isJoinWithUserInfo() {
-    return joinWithUserInfo;
-  }
-
-  public void setJoinWithUserInfo(boolean joinWithUserInfo) {
-    this.joinWithUserInfo = joinWithUserInfo;
-  }
-
   public String[] getOwnerLongNameIn() {
     return ownerLongNameIn;
   }
