@@ -76,6 +76,8 @@ import pro.taskana.task.internal.models.AttachmentSummaryImpl;
 import pro.taskana.task.internal.models.MinimalTaskSummary;
 import pro.taskana.task.internal.models.TaskImpl;
 import pro.taskana.task.internal.models.TaskSummaryImpl;
+import pro.taskana.user.api.models.User;
+import pro.taskana.user.internal.UserMapper;
 import pro.taskana.workbasket.api.WorkbasketPermission;
 import pro.taskana.workbasket.api.WorkbasketService;
 import pro.taskana.workbasket.api.exceptions.MismatchedWorkbasketPermissionException;
@@ -100,6 +102,7 @@ public class TaskServiceImpl implements TaskService {
   private final ServiceLevelHandler serviceLevelHandler;
   private final AttachmentHandler attachmentHandler;
   private final AttachmentMapper attachmentMapper;
+  private final UserMapper userMapper;
   private final HistoryEventManager historyEventManager;
   private final CreateTaskPreprocessorManager createTaskPreprocessorManager;
   private final PriorityServiceManager priorityServiceManager;
@@ -108,17 +111,20 @@ public class TaskServiceImpl implements TaskService {
       InternalTaskanaEngine taskanaEngine,
       TaskMapper taskMapper,
       TaskCommentMapper taskCommentMapper,
-      AttachmentMapper attachmentMapper) {
+      AttachmentMapper attachmentMapper,
+      UserMapper userMapper) {
     this.taskanaEngine = taskanaEngine;
     this.taskMapper = taskMapper;
     this.workbasketService = taskanaEngine.getEngine().getWorkbasketService();
     this.attachmentMapper = attachmentMapper;
+    this.userMapper = userMapper;
     this.classificationService = taskanaEngine.getEngine().getClassificationService();
     this.historyEventManager = taskanaEngine.getHistoryEventManager();
     this.createTaskPreprocessorManager = taskanaEngine.getCreateTaskPreprocessorManager();
     this.priorityServiceManager = taskanaEngine.getPriorityServiceManager();
     this.taskTransferrer = new TaskTransferrer(taskanaEngine, taskMapper, this);
-    this.taskCommentService = new TaskCommentServiceImpl(taskanaEngine, taskCommentMapper, this);
+    this.taskCommentService =
+        new TaskCommentServiceImpl(taskanaEngine, taskCommentMapper, userMapper, this);
     this.serviceLevelHandler =
         new ServiceLevelHandler(taskanaEngine, taskMapper, attachmentMapper, this);
     this.attachmentHandler = new AttachmentHandler(attachmentMapper, classificationService);
@@ -321,6 +327,15 @@ public class TaskServiceImpl implements TaskService {
         }
 
         resultTask.setClassificationSummary(classification);
+
+        if (resultTask.getOwner() != null
+            && !resultTask.getOwner().isEmpty()
+            && taskanaEngine.getEngine().getConfiguration().getAddAdditionalUserInfo()) {
+          User owner = userMapper.findById(resultTask.getOwner());
+          if (owner != null) {
+            resultTask.setOwnerLongName(owner.getLongName());
+          }
+        }
         return resultTask;
       } else {
         throw new TaskNotFoundException(id);
@@ -365,16 +380,13 @@ public class TaskServiceImpl implements TaskService {
 
   @Override
   public TaskQuery createTaskQuery() {
-    return new TaskQueryImpl(
-        taskanaEngine,
-        this,
-        taskanaEngine.getEngine().getConfiguration().isLongNameIncludedInQuery());
+    return new TaskQueryImpl(taskanaEngine, this);
   }
 
   @Override
   public TaskCommentQuery createTaskCommentQuery() {
     return new TaskCommentQueryImpl(
-        taskanaEngine, taskanaEngine.getEngine().getConfiguration().isLongNameIncludedInQuery());
+        taskanaEngine);
   }
 
   @Override

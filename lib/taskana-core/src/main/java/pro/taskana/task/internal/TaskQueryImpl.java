@@ -175,22 +175,22 @@ public class TaskQueryImpl implements TaskQuery {
   private boolean joinWithClassifications = false;
   private boolean joinWithAttachmentClassifications = false;
   private boolean joinWithWorkbaskets = false;
+  private boolean joinWithUserInfo = false;
   private boolean addAttachmentColumnsToSelectClauseForOrdering = false;
   private boolean addClassificationNameToSelectClauseForOrdering = false;
   private boolean addAttachmentClassificationNameToSelectClauseForOrdering = false;
   private boolean addWorkbasketNameToSelectClauseForOrdering = false;
-  private boolean includeLongName = false;
+
 
   TaskQueryImpl(
       InternalTaskanaEngine taskanaEngine,
-      TaskServiceImpl taskService,
-      boolean includeLongName) {
+      TaskServiceImpl taskService) {
     this.taskanaEngine = taskanaEngine;
     this.taskService = taskService;
     this.orderBy = new ArrayList<>();
     this.orderColumns = new ArrayList<>();
     this.filterByAccessIdIn = true;
-    this.includeLongName = includeLongName;
+    this.joinWithUserInfo = taskanaEngine.getEngine().getConfiguration().getAddAdditionalUserInfo();
   }
 
   @Override
@@ -341,28 +341,28 @@ public class TaskQueryImpl implements TaskQuery {
 
   @Override
   public TaskQuery ownerLongNameIn(String... longNames) {
-    includeLongName = true;
+    joinWithUserInfo = true;
     this.ownerLongNameIn = longNames;
     return this;
   }
 
   @Override
   public TaskQuery ownerLongNameNotIn(String... longNames) {
-    includeLongName = true;
+    joinWithUserInfo = true;
     this.ownerLongNameNotIn = longNames;
     return this;
   }
 
   @Override
   public TaskQuery ownerLongNameLike(String... longNames) {
-    includeLongName = true;
+    joinWithUserInfo = true;
     this.ownerLongNameLike = toUpperCopy(longNames);
     return this;
   }
 
   @Override
   public TaskQuery ownerLongNameNotLike(String... longNames) {
-    includeLongName = true;
+    joinWithUserInfo = true;
     this.ownerLongNameNotLike = toUpperCopy(longNames);
     return this;
   }
@@ -1018,7 +1018,7 @@ public class TaskQueryImpl implements TaskQuery {
 
   @Override
   public TaskQuery orderByOwnerLongName(SortDirection sortDirection) {
-    includeLongName = true;
+    joinWithUserInfo = true;
     return DB.isDb2(getDatabaseId())
         ? addOrderCriteria("ULONG_NAME", sortDirection)
         : addOrderCriteria("u.LONG_NAME", sortDirection);
@@ -1097,7 +1097,7 @@ public class TaskQueryImpl implements TaskQuery {
       }
 
       if (columnName == TaskQueryColumnName.OWNER_LONG_NAME) {
-        includeLongName = true;
+        joinWithUserInfo = true;
       }
 
       setupJoinAndOrderParameters();
@@ -1204,12 +1204,12 @@ public class TaskQueryImpl implements TaskQuery {
         addAttachmentColumnsToSelectClauseForOrdering;
   }
 
-  public boolean isIncludeLongName() {
-    return includeLongName;
+  public boolean isJoinWithUserInfo() {
+    return joinWithUserInfo;
   }
 
-  public void setIncludeLongName(boolean includeLongName) {
-    this.includeLongName = includeLongName;
+  public void setJoinWithUserInfo(boolean joinWithUserInfo) {
+    this.joinWithUserInfo = joinWithUserInfo;
   }
 
   public String[] getTaskIds() {

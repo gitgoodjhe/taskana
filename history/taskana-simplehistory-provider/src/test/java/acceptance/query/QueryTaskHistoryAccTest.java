@@ -186,7 +186,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
     assertThat(returnValues).isEmpty();
 
     returnValues = getHistoryService().createTaskHistoryQuery().userIdIn("admin").list();
-    assertThat(returnValues).hasSize(7);
+    assertThat(returnValues).hasSize(6);
 
     returnValues = getHistoryService().createTaskHistoryQuery().domainIn("DOMAIN_A").list();
     assertThat(returnValues).hasSize(13);
@@ -335,13 +335,13 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
         getHistoryService()
             .createTaskHistoryQuery()
             .listValues(TaskHistoryQueryColumnName.USER_ID, null);
-    assertThat(returnedList).hasSize(3);
+    assertThat(returnedList).hasSize(4);
 
     returnedList =
         getHistoryService()
             .createTaskHistoryQuery()
             .listValues(TaskHistoryQueryColumnName.USER_LONG_NAME, null);
-    assertThat(returnedList).hasSize(2);
+    assertThat(returnedList).hasSize(3);
 
     returnedList =
         getHistoryService()
@@ -449,7 +449,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
   @WithAccessId(user = "user-1-1")
   @Test
   void should_SetUserLongNameOfTask_When_PropertyEnabled() throws Exception {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(true);
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(true);
     List<TaskHistoryEvent> taskHistoryEvents =
         getHistoryService()
             .createTaskHistoryQuery()
@@ -467,7 +467,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
   @WithAccessId(user = "user-1-1")
   @Test
   void should_SetTaskOwnerLongNameOfTaskHistoryEvent_When_PropertyEnabled() throws Exception {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(true);
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(true);
     List<TaskHistoryEvent> taskHistoryEvents =
         getHistoryService()
             .createTaskHistoryQuery()
@@ -493,7 +493,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
   @WithAccessId(user = "user-1-1")
   @Test
   void should_NotSetUserLongNameOfTaskHistoryEvent_When_PropertyDisabled() {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(false);
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(false);
     List<TaskHistoryEvent> taskHistoryEvents =
         getHistoryService()
             .createTaskHistoryQuery()
@@ -509,7 +509,7 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
   @WithAccessId(user = "user-1-1")
   @Test
   void should_NotSetTaskOwnerLongNameOfTaskHistoryEvent_When_PropertyDisabled() {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(false);
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(false);
     List<TaskHistoryEvent> taskHistoryEvents =
         getHistoryService()
             .createTaskHistoryQuery()
@@ -525,11 +525,11 @@ class QueryTaskHistoryAccTest extends AbstractAccTest {
   @WithAccessId(user = "user-1-1")
   @Test
   void should_SetUserLongNameOfTaskHistoryEventToNull_When_NotExistingAsUserInDatabase() {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(true);
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(true);
     List<TaskHistoryEvent> taskHistoryEvents =
         getHistoryService()
             .createTaskHistoryQuery()
-            .idIn("THI:000000000000000000000000000000000000")
+            .idIn("THI:000000000000000000000000000000000001")
             .list();
 
     assertThat(taskHistoryEvents).hasSize(1);

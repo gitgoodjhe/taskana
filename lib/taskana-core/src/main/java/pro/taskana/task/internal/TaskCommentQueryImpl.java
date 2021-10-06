@@ -3,8 +3,6 @@ package pro.taskana.task.internal;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.ibatis.session.RowBounds;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pro.taskana.common.api.TaskanaRole;
 import pro.taskana.common.api.TimeInterval;
@@ -49,12 +47,12 @@ public class TaskCommentQueryImpl implements TaskCommentQuery {
   private TimeInterval[] createdNotIn;
 
   private String[] accessIdIn;
-  private boolean includeLongName;
+  private boolean joinWithUserInfo;
 
-  TaskCommentQueryImpl(InternalTaskanaEngine taskanaEngine, boolean includeLongName) {
+  TaskCommentQueryImpl(InternalTaskanaEngine taskanaEngine) {
     this.taskanaEngine = taskanaEngine;
     this.taskService = (TaskServiceImpl) taskanaEngine.getEngine().getTaskService();
-    this.includeLongName = includeLongName;
+    this.joinWithUserInfo = taskanaEngine.getEngine().getConfiguration().getAddAdditionalUserInfo();
   }
 
   @Override
@@ -189,7 +187,7 @@ public class TaskCommentQueryImpl implements TaskCommentQuery {
     queryColumnName = columnName;
     // TO-DO: order?
     if (columnName == TaskCommentQueryColumnName.CREATOR_LONG_NAME) {
-      includeLongName = true;
+      joinWithUserInfo = true;
     }
 
     return taskanaEngine.executeInDatabaseConnection(
@@ -293,11 +291,11 @@ public class TaskCommentQueryImpl implements TaskCommentQuery {
   }
 
   public boolean isIncludeLongName() {
-    return includeLongName;
+    return joinWithUserInfo;
   }
 
-  public void setIncludeLongName(boolean includeLongName) {
-    this.includeLongName = includeLongName;
+  public void setIncludeLongName(boolean joinWithUserInfo) {
+    this.joinWithUserInfo = joinWithUserInfo;
   }
 
   private void setupAccessIds() {
@@ -369,8 +367,8 @@ public class TaskCommentQueryImpl implements TaskCommentQuery {
         + Arrays.toString(createdNotIn)
         + ", accessIdIn="
         + Arrays.toString(accessIdIn)
-        + ", includeLongName="
-        + includeLongName
+        + ", joinWithUserInfo="
+        + joinWithUserInfo
         + "]";
   }
 }

@@ -65,8 +65,8 @@ class SimpleHistoryServiceImplTest {
     doReturn(taskanaEngine).when(taskanaEngineConfiguration).buildTaskanaEngine();
     cutSpy.initialize(taskanaEngineConfiguration.buildTaskanaEngine());
 
-    verify(sqlSessionManagerMock, times(3)).getMapper(any());
-    verify(taskanaHistoryEngineMock, times(3)).getSqlSession();
+    verify(sqlSessionManagerMock, times(4)).getMapper(any());
+    verify(taskanaHistoryEngineMock, times(4)).getSqlSession();
   }
 
   @Test
@@ -103,7 +103,7 @@ class SimpleHistoryServiceImplTest {
             "wbKey1", "taskId1", "type1", "wbKey2", "someUserId", "someDetails"));
 
     when(taskanaHistoryEngineMock.getConfiguration()).thenReturn(taskanaEngineConfiguration);
-    when(taskanaEngineConfiguration.isLongNameIncludedInQuery()).thenReturn(false);
+    when(taskanaEngineConfiguration.getAddAdditionalUserInfo()).thenReturn(false);
 
     when(taskanaHistoryEngineMock.getSqlSession()).thenReturn(sqlSessionMock);
     when(sqlSessionMock.selectList(any(), any())).thenReturn(new ArrayList<>(returnList));

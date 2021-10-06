@@ -39,7 +39,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, c.NAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ac.NAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w.NAME </if>"
-        + "<if test=\"includeLongName\">, u.LONG_NAME </if>"
+        + "<if test=\"joinWithUserInfo\">, u.LONG_NAME </if>"
         + "FROM TASK t "
         + "<if test=\"joinWithAttachments\">"
         + "LEFT JOIN ATTACHMENT AS a ON t.ID = a.TASK_ID "
@@ -53,7 +53,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"joinWithWorkbaskets\">"
         + "LEFT JOIN WORKBASKET AS w ON t.WORKBASKET_ID = w.ID "
         + "</if>"
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON t.owner = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
@@ -87,7 +87,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, c.NAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ac.NAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w.NAME </if>"
-        + "<if test=\"includeLongName\">, u.LONG_NAME </if>"
+        + "<if test=\"joinWithUserInfo\">, u.LONG_NAME </if>"
         + "FROM TASK t "
         + "<if test=\"joinWithAttachments\">"
         + "LEFT JOIN ATTACHMENT a ON t.ID = a.TASK_ID "
@@ -101,7 +101,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"joinWithWorkbaskets\">"
         + "LEFT JOIN WORKBASKET AS w ON t.WORKBASKET_ID = w.ID "
         + "</if>"
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON t.owner = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
@@ -152,7 +152,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"joinWithAttachmentClassifications\">"
         + "LEFT JOIN CLASSIFICATION AS ac ON a.CLASSIFICATION_ID = ac.ID "
         + "</if>"
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON t.owner = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
@@ -179,7 +179,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"joinWithAttachmentClassifications\">"
         + "LEFT JOIN CLASSIFICATION AS ac ON a.CLASSIFICATION_ID = ac.ID "
         + "</if>"
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON t.owner = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
@@ -203,7 +203,7 @@ public class TaskQuerySqlProvider {
   public static String queryTaskColumnValues() {
     return OPENING_SCRIPT_TAG
         + "SELECT DISTINCT ${columnName} "
-        + "<if test=\"includeLongName\">, u.LONG_NAME </if>"
+        + "<if test=\"joinWithUserInfo\">, u.LONG_NAME </if>"
         + "FROM TASK t "
         + "<if test=\"joinWithAttachments\">"
         + "LEFT JOIN ATTACHMENT AS a ON t.ID = a.TASK_ID "
@@ -214,7 +214,7 @@ public class TaskQuerySqlProvider {
         + "<if test=\"joinWithAttachmentClassifications\">"
         + "LEFT JOIN CLASSIFICATION AS ac ON a.CLASSIFICATION_ID = ac.ID "
         + "</if>"
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON t.owner = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
@@ -286,7 +286,7 @@ public class TaskQuerySqlProvider {
         + ", ACLASSIFICATION_ID, ACLASSIFICATION_KEY, CHANNEL, REF_VALUE, ARECEIVED"
         + "</if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, WNAME</if>"
-        + "<if test=\"includeLongName\">, ULONG_NAME </if>";
+        + "<if test=\"joinWithUserInfo\">, ULONG_NAME </if>";
   }
 
   private static String checkForAuthorization() {

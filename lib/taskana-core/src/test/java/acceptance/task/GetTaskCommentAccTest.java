@@ -85,4 +85,32 @@ class GetTaskCommentAccTest extends AbstractAccTest {
         () -> taskService.getTaskComment("TCI:000000000000000000000000000000000012");
     assertThatThrownBy(lambda).isInstanceOf(NotAuthorizedException.class);
   }
+
+  @WithAccessId(user = "admin")
+  @Test
+  void should_SetCreatorFullNameOfTaskComment_When_PropertyEnabled() throws Exception {
+
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(true);
+    TaskService taskService = taskanaEngine.getTaskService();
+
+    TaskComment taskComment =
+        taskService.getTaskComment("TCI:000000000000000000000000000000000000");
+
+    String creatorLongName =
+        taskanaEngine.getUserService().getUser(taskComment.getCreator()).getFullName();
+    assertThat(taskComment).extracting(TaskComment::getCreatorLongName).isEqualTo(creatorLongName);
+  }
+
+  @WithAccessId(user = "admin")
+  @Test
+  void should_NotSetCreatorFullNameOfTaskComment_When_PropertyDisabled() throws Exception {
+
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(false);
+    TaskService taskService = taskanaEngine.getTaskService();
+
+    TaskComment taskComment =
+        taskService.getTaskComment("TCI:000000000000000000000000000000000000");
+
+    assertThat(taskComment).extracting(TaskComment::getCreatorLongName).isNull();
+  }
 }

@@ -230,7 +230,7 @@ class QueryTaskCommentAccTest extends AbstractAccTest {
   @WithAccessId(user = "admin")
   @Test
   void should_ReturnListedValues_For_QueryColumnCreatorLongName() {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(false);
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(false);
     List<String> listedValues =
         taskService
             .createTaskCommentQuery()
@@ -297,8 +297,8 @@ class QueryTaskCommentAccTest extends AbstractAccTest {
 
   @WithAccessId(user = "admin")
   @Test
-  void should_SetTaskCreatorLongNameOfTaskComment_When_PropertyEnabled() throws Exception {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(true);
+  void should_SetTaskCreatorFullNameOfTaskComment_When_PropertyEnabled() throws Exception {
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(true);
     List<TaskComment> taskComments =
         taskService
             .createTaskCommentQuery()
@@ -306,17 +306,17 @@ class QueryTaskCommentAccTest extends AbstractAccTest {
             .list();
 
     assertThat(taskComments).hasSize(1);
-    String userLongName =
-        taskanaEngine.getUserService().getUser(taskComments.get(0).getCreator()).getLongName();
+    String creatorFullName =
+        taskanaEngine.getUserService().getUser(taskComments.get(0).getCreator()).getFullName();
     assertThat(taskComments.get(0))
         .extracting(TaskComment::getCreatorLongName)
-        .isEqualTo(userLongName);
+        .isEqualTo(creatorFullName);
   }
 
   @WithAccessId(user = "user-1-1")
   @Test
-  void should_NotSetTaskCreatorLongNameOfTaskComment_When_PropertyDisabled() {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(false);
+  void should_NotSetTaskCreatorFullNameOfTaskComment_When_PropertyDisabled() {
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(false);
     List<TaskComment> taskComments =
         taskService
             .createTaskCommentQuery()
@@ -329,8 +329,8 @@ class QueryTaskCommentAccTest extends AbstractAccTest {
 
   @WithAccessId(user = "admin")
   @Test
-  void should_SetTaskCreatorLongNameOfTaskCommentToNull_When_NotExistingAsUserInDatabase() {
-    taskanaEngineConfiguration.setLongNameIncludedInQuery(true);
+  void should_SetTaskCreatorFullNameOfTaskCommentToNull_When_NotExistingAsUserInDatabase() {
+    taskanaEngineConfiguration.setAddAdditionalUserInfo(true);
     List<TaskComment> taskComments =
         taskService
             .createTaskCommentQuery()

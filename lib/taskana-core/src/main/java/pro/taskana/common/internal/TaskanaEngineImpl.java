@@ -140,7 +140,8 @@ public class TaskanaEngineImpl implements TaskanaEngine {
         internalTaskanaEngineImpl,
         sessionManager.getMapper(TaskMapper.class),
         sessionManager.getMapper(TaskCommentMapper.class),
-        sessionManager.getMapper(AttachmentMapper.class));
+        sessionManager.getMapper(AttachmentMapper.class),
+        sessionManager.getMapper(UserMapper.class));
   }
 
   @Override

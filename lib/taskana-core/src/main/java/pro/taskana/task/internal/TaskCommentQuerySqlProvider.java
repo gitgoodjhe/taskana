@@ -26,12 +26,12 @@ public class TaskCommentQuerySqlProvider {
     return OPENING_SCRIPT_TAG
         + "SELECT "
         + commonSelectFields()
-        + "<if test=\"includeLongName\">"
-        + ", u.LONG_NAME"
+        + "<if test=\"joinWithUserInfo\">"
+        + ", u.FULL_NAME"
         + "</if>"
         + "FROM TASK_COMMENT tc "
         + "LEFT JOIN Task AS t ON tc.TASK_ID = t.ID "
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON tc.CREATOR = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
@@ -60,7 +60,7 @@ public class TaskCommentQuerySqlProvider {
         + "SELECT DISTINCT ${queryColumnName} "
         + "FROM TASK_COMMENT tc "
         + "LEFT JOIN Task AS t ON tc.TASK_ID = t.ID "
-        + "<if test=\"includeLongName\">"
+        + "<if test=\"joinWithUserInfo\">"
         + "LEFT JOIN USER_INFO AS u ON tc.CREATOR = u.USER_ID "
         + "</if>"
         + OPENING_WHERE_TAG
