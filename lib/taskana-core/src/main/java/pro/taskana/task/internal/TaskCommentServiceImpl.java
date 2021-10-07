@@ -187,7 +187,7 @@ class TaskCommentServiceImpl {
       if (taskanaEngine.getEngine().getConfiguration().getAddAdditionalUserInfo()) {
         User creator = userMapper.findById(result.getCreator());
         if (creator != null) {
-          result.setCreatorLongName(creator.getFullName());
+          result.setCreatorFullName(creator.getFullName());
         }
       }
 
