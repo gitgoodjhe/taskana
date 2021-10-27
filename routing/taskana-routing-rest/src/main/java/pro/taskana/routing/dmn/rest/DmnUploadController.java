@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import pro.taskana.common.api.TaskanaEngine;
+import pro.taskana.common.api.exceptions.NotAuthorizedException;
 import pro.taskana.routing.dmn.service.DmnConverterService;
 import pro.taskana.routing.dmn.spi.internal.DmnValidatorManager;
 
@@ -44,7 +45,8 @@ public class DmnUploadController {
    */
   @PostMapping(RoutingRestEndpoints.URL_DMN)
   public ResponseEntity<RoutingUploadResultRepresentationModel> convertAndUpload(
-      @RequestParam("excelRoutingFile") MultipartFile excelRoutingFile) throws IOException {
+      @RequestParam("excelRoutingFile") MultipartFile excelRoutingFile)
+      throws IOException, NotAuthorizedException {
 
     DmnModelInstance dmnModelInstance = dmnConverterService.convertExcelToDmn(excelRoutingFile);
 
