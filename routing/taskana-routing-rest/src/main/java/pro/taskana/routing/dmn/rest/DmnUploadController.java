@@ -41,6 +41,8 @@ public class DmnUploadController {
    *
    * @param excelRoutingFile the excel file containing the routing rules
    * @return the result of the upload
+   * @throws NotAuthorizedException if the current user is not authorized to upload/convert an excel
+   *     file
    * @throws IOException if there is an I/O problem with the provided excel file
    */
   @PostMapping(RoutingRestEndpoints.URL_DMN)

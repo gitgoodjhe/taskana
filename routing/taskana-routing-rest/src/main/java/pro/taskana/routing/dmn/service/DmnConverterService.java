@@ -15,8 +15,8 @@ import pro.taskana.common.api.TaskanaRole;
 import pro.taskana.common.api.exceptions.NotAuthorizedException;
 import pro.taskana.routing.dmn.service.util.InputEntriesSanitizer;
 
+/** This class converts an Excel file with routing roules to a DMN table. */
 @Service
-/** This class converts an Excel file with routing roules to a DMN table */
 public class DmnConverterService {
 
   private TaskanaEngine taskanaEngine;
