@@ -41,6 +41,12 @@
       <artifactId>taskana-rest-spring-example-common</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>pro.taskana</groupId>
+      <artifactId>taskana-routing-rest</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
   <profiles>

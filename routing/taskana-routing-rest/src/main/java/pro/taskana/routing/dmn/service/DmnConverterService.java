@@ -61,8 +61,8 @@ public class DmnConverterService {
     for (Rule rule : dmnModel.getModelElementsByType(Rule.class)) {
 
       List<OutputEntry> outputEntries = new ArrayList<>(rule.getOutputEntries());
-      String workbasketKey = outputEntries.get(0).getTextContent().replaceAll("^\"|\"$", "");
-      String domain = outputEntries.get(1).getTextContent().replaceAll("^\"|\"$", "");
+      String workbasketKey = outputEntries.get(0).getTextContent().replaceAll("(^\")|(\"$)", "");
+      String domain = outputEntries.get(1).getTextContent().replaceAll("(^\")|(\"$)", "");
       outputKeyDomains.add(new KeyDomain(workbasketKey, domain));
     }
     return outputKeyDomains;
