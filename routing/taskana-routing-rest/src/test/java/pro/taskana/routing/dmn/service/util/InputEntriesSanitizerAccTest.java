@@ -10,18 +10,17 @@ import org.camunda.bpm.model.dmn.Dmn;
 import org.camunda.bpm.model.dmn.DmnModelInstance;
 import org.camunda.bpm.model.dmn.instance.InputEntry;
 import org.camunda.bpm.model.dmn.instance.Rule;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
 
 class InputEntriesSanitizerAccTest {
 
-  private static final String TEST_DMN_PATH = "src\\test\\resources\\testDmnRouting.dmn";
+  private static final String TEST_DMN = "testDmnRouting.dmn";
 
   @Test
-  @Disabled("locally this works")
-  void should_SanitizeInputEntries_When_FunctionsDetected() {
+  void should_SanitizeInputEntries_When_FunctionsDetected() throws Exception {
 
-    File testDmnModel = new File(TEST_DMN_PATH);
+    File testDmnModel = new ClassPathResource(TEST_DMN).getFile();
     DmnModelInstance dmnModelInstance = Dmn.readModelFromFile(testDmnModel);
 
     List<Rule> allRules =
