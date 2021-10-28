@@ -27,8 +27,13 @@ class DmnUploadControllerRestDocTest extends BaseRestDocTest {
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.multipart(RoutingRestEndpoints.URL_DMN)
-                .file(routingMultiPartFile))
+            MockMvcRequestBuilders.multipart(RoutingRestEndpoints.URL_ROUTING_RULES_DEFAULT)
+                .file(routingMultiPartFile)
+                .with(
+                    request -> {
+                      request.setMethod("PUT");
+                      return request;
+                    }))
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
 }

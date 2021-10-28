@@ -55,10 +55,10 @@ class DmnUploadControllerIntTest {
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
     HttpEntity<Object> auth = new HttpEntity<>(body, headers);
-    String url = restHelper.toUrl(RoutingRestEndpoints.URL_DMN);
+    String url = restHelper.toUrl(RoutingRestEndpoints.URL_ROUTING_RULES_DEFAULT);
 
     ResponseEntity<RoutingUploadResultRepresentationModel> responseEntity =
-        TEMPLATE.exchange(url, HttpMethod.POST, auth, RoutingUploadResultRepresentationModel.class);
+        TEMPLATE.exchange(url, HttpMethod.PUT, auth, RoutingUploadResultRepresentationModel.class);
 
     SoftAssertions softly = new SoftAssertions();
 

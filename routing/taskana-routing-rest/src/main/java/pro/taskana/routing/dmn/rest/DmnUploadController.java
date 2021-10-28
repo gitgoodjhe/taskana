@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +45,7 @@ public class DmnUploadController {
    *     file
    * @throws IOException if there is an I/O problem with the provided excel file
    */
-  @PostMapping(RoutingRestEndpoints.URL_DMN)
+  @PutMapping(RoutingRestEndpoints.URL_ROUTING_RULES_DEFAULT)
   public ResponseEntity<RoutingUploadResultRepresentationModel> convertAndUpload(
       @RequestParam("excelRoutingFile") MultipartFile excelRoutingFile)
       throws IOException, NotAuthorizedException {
