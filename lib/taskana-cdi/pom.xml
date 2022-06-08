@@ -21,11 +21,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>pro.taskana</groupId>
-      <artifactId>custom-checkstyle</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>${version.javaee-api}</version>
@@ -112,10 +107,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

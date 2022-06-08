@@ -19,7 +19,7 @@ import pro.taskana.task.api.models.Task;
 import pro.taskana.task.internal.models.ObjectReferenceImpl;
 import pro.taskana.workbasket.api.exceptions.WorkbasketNotFoundException;
 
-/** The ExampleBootstrap contains an example Bootstrap Application. */
+/** Example Bootstrap Application. */
 @ApplicationScoped
 public class ExampleBootstrap {
 
