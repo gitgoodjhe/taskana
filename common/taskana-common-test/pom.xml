@@ -32,10 +32,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>pro.taskana</groupId>
-      <artifactId>custom-checkstyle</artifactId>
-      <version>${project.version}</version>
-    </dependency>    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
     </dependency>

@@ -16,11 +16,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>pro.taskana</groupId>
-      <artifactId>custom-checkstyle</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
       <version>${version.aspectj}</version>

@@ -31,11 +31,6 @@
     </dependency>
     <dependency>
       <groupId>pro.taskana</groupId>
-      <artifactId>custom-checkstyle</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>pro.taskana</groupId>
       <artifactId>taskana-common</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -28,10 +28,5 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>pro.taskana</groupId>
-      <artifactId>custom-checkstyle</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>

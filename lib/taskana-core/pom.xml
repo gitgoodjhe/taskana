@@ -26,11 +26,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>pro.taskana</groupId>
-      <artifactId>custom-checkstyle</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
       <version>${version.mybatis}</version>
@@ -141,15 +136,6 @@
       </exclusions>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 
 <repositories>
     <!-- this repository is needed to fetch com.ibm.db2.jcc -->
