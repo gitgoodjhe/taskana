@@ -1269,6 +1269,10 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   // endregion
   // region read
 
+  TaskQuery groupByPor();
+
+  TaskQuery groupBySor(String type);
+
   /**
    * Add the isRead flag to the query.
    *

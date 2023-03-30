@@ -80,6 +80,8 @@ public interface TaskSummary {
    */
   Instant getReceived();
 
+  Integer getGroupByCount();
+
   /**
    * Returns the time when the {@linkplain Task} is due.
    *
