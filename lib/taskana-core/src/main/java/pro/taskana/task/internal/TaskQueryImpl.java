@@ -70,7 +70,8 @@ public class TaskQueryImpl implements TaskQuery {
   private boolean addAttachmentClassificationNameToSelectClauseForOrdering = false;
   private boolean addWorkbasketNameToSelectClauseForOrdering = false;
   private boolean joinWithUserInfo;
-
+  private boolean groupByPor;
+  private String groupBySor;
   private String[] taskId;
   private String[] taskIdNotIn;
   private String[] externalIdIn;
@@ -1113,6 +1114,28 @@ public class TaskQueryImpl implements TaskQuery {
   }
 
   @Override
+  public TaskQuery groupByPor() {
+    if (!taskanaEngine.getEngine().getConfiguration().isCommonQueryUsageEnforce()
+        && getDB().equals(DB.DB2)) {
+      throw new SystemException(
+          "taskana.commonQueryUsage.enforce needs to be set to true in order to group by por.");
+    }
+    groupByPor = true;
+    return this;
+  }
+
+  @Override
+  public TaskQuery groupBySor(String type) {
+    if (!taskanaEngine.getEngine().getConfiguration().isCommonQueryUsageEnforce()
+        && getDB().equals(DB.DB2)) {
+      throw new SystemException(
+          "taskana.commonQueryUsage.enforce needs to be set to true in order to group by sor.");
+    }
+    groupBySor = type;
+    return sorTypeIn(type);
+  }
+
+  @Override
   public TaskQuery readEquals(Boolean isRead) {
     this.isRead = isRead;
     return this;
@@ -2115,7 +2138,9 @@ public class TaskQueryImpl implements TaskQuery {
   // optimized query for db2 can't be used for now in case of selectAndClaim because of temporary
   // tables and the "for update" clause clashing in db2
   private String getLinkToMapperScript() {
-    if (DB.DB2 == getDB() && !selectAndClaim) {
+    if (DB.DB2 == getDB()
+        && !selectAndClaim
+        && !taskanaEngine.getEngine().getConfiguration().isCommonQueryUsageEnforce()) {
       return LINK_TO_MAPPER_DB2;
     } else if (selectAndClaim && DB.ORACLE == getDB()) {
       return LINK_TO_MAPPER_ORACLE;
@@ -2125,7 +2150,10 @@ public class TaskQueryImpl implements TaskQuery {
   }
 
   private String getLinkToCounterTaskScript() {
-    return DB.DB2 == getDB() ? LINK_TO_COUNTER_DB2 : LINK_TO_COUNTER;
+    return DB.DB2 == getDB()
+            && !taskanaEngine.getEngine().getConfiguration().isCommonQueryUsageEnforce()
+        ? LINK_TO_COUNTER_DB2
+        : LINK_TO_COUNTER;
   }
 
   private void validateAllTimeIntervals(TimeInterval[] intervals) {

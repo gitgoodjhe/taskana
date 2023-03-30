@@ -123,6 +123,10 @@ public class TaskanaConfiguration {
   private final Set<WorkbasketPermission> minimalPermissionsToAssignDomains;
   // endregion
 
+  // region database configuration
+  private final boolean commonQueryUsageEnforce;
+  // endregion
+
   // region custom configuration
   private final Map<String, String> properties;
   // endregion
@@ -194,6 +198,8 @@ public class TaskanaConfiguration {
     this.addAdditionalUserInfo = builder.addAdditionalUserInfo;
     this.minimalPermissionsToAssignDomains =
         Collections.unmodifiableSet(builder.minimalPermissionsToAssignDomains);
+    // database configuration
+    this.commonQueryUsageEnforce = builder.commonQueryUsageEnforce;
     // custom configuration
     this.properties = Map.copyOf(builder.properties);
   }
@@ -388,6 +394,10 @@ public class TaskanaConfiguration {
     return minimalPermissionsToAssignDomains;
   }
 
+  public boolean isCommonQueryUsageEnforce() {
+    return commonQueryUsageEnforce;
+  }
+
   /**
    * return all properties loaded from taskana properties file. Per Design the normal Properties are
    * not immutable, so we return here an ImmutableMap, because we don't want direct changes in the
@@ -447,6 +457,7 @@ public class TaskanaConfiguration {
         customJobs,
         addAdditionalUserInfo,
         minimalPermissionsToAssignDomains,
+        commonQueryUsageEnforce,
         properties);
   }
 
@@ -481,6 +492,7 @@ public class TaskanaConfiguration {
         && simpleHistoryCleanupJobAllCompletedSameParentBusiness
             == other.simpleHistoryCleanupJobAllCompletedSameParentBusiness
         && taskUpdatePriorityJobEnabled == other.taskUpdatePriorityJobEnabled
+        && commonQueryUsageEnforce == other.commonQueryUsageEnforce
         && taskUpdatePriorityJobBatchSize == other.taskUpdatePriorityJobBatchSize
         && userInfoRefreshJobEnabled == other.userInfoRefreshJobEnabled
         && addAdditionalUserInfo == other.addAdditionalUserInfo
@@ -596,6 +608,8 @@ public class TaskanaConfiguration {
         + addAdditionalUserInfo
         + ", minimalPermissionsToAssignDomains="
         + minimalPermissionsToAssignDomains
+        + ", commonQueryUsageEnforce="
+        + commonQueryUsageEnforce
         + ", properties="
         + properties
         + "]";
@@ -743,6 +757,11 @@ public class TaskanaConfiguration {
     private Set<WorkbasketPermission> minimalPermissionsToAssignDomains = new HashSet<>();
     // endregion
 
+    // region database configuration
+    @TaskanaProperty("taskana.commonQueryUsage.enforce")
+    private boolean commonQueryUsageEnforce = false;
+    // endregion
+
     // region custom configuration
     private Map<String, String> properties = Collections.emptyMap();
     // endregion
@@ -845,6 +864,8 @@ public class TaskanaConfiguration {
       // user configuration
       this.addAdditionalUserInfo = conf.addAdditionalUserInfo;
       this.minimalPermissionsToAssignDomains = conf.minimalPermissionsToAssignDomains;
+      // database configuration
+      this.commonQueryUsageEnforce = conf.commonQueryUsageEnforce;
       // custom configuration
       this.properties = conf.properties;
     }
@@ -1128,6 +1149,11 @@ public class TaskanaConfiguration {
     }
 
     // endregion
+    // region database configuration
+    public Builder commonQueryUsageEnforce(boolean commonQueryUsageEnforce) {
+      this.commonQueryUsageEnforce = commonQueryUsageEnforce;
+      return this;
+    }
 
     public TaskanaConfiguration build() {
       adjustConfiguration();

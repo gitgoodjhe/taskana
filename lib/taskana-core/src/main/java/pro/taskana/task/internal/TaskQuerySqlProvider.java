@@ -24,8 +24,10 @@ public class TaskQuerySqlProvider {
   @SuppressWarnings("unused")
   public static String queryTaskSummaries() {
     return OPENING_SCRIPT_TAG
+        + openOuterClauseForAggregatingByPorOrSor()
         + "SELECT <if test=\"useDistinctKeyword\">DISTINCT</if> "
         + commonSelectFields()
+        + "<if test='groupBySor != null'>, o.VALUE as SOR_VALUE </if>"
         + "<if test=\"addAttachmentColumnsToSelectClauseForOrdering\">"
         + ", a.CLASSIFICATION_ID, a.CLASSIFICATION_KEY, a.CHANNEL, a.REF_VALUE, a.RECEIVED"
         + "</if>"
@@ -34,6 +36,8 @@ public class TaskQuerySqlProvider {
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ac.NAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w.NAME </if>"
         + "<if test=\"joinWithUserInfo\">, u.LONG_NAME </if>"
+        + groupByPorIfActive()
+        + groupBySorIfActive()
         + "FROM TASK t "
         + "<if test=\"joinWithAttachments\">"
         + "LEFT JOIN ATTACHMENT a ON t.ID = a.TASK_ID "
@@ -61,6 +65,8 @@ public class TaskQuerySqlProvider {
         + commonTaskWhereStatement()
         + "<if test='selectAndClaim == true'> AND t.STATE = 'READY' </if>"
         + CLOSING_WHERE_TAG
+        + closeOuterClauseForAggregatingByPor()
+        + closeOuterClauseForAggregatingBySor()
         + "<if test='!orderBy.isEmpty()'>"
         + "ORDER BY <foreach item='item' collection='orderBy' separator=',' >${item}</foreach>"
         + "</if> "
@@ -208,6 +214,14 @@ public class TaskQuerySqlProvider {
   public static String countQueryTasks() {
     return OPENING_SCRIPT_TAG
         + "SELECT COUNT( <if test=\"useDistinctKeyword\">DISTINCT</if> t.ID) "
+        + "<if test=\"groupByPor or groupBySor != null\"> "
+        + "FROM (SELECT t.ID, t.POR_VALUE "
+        + "</if> "
+        + "<if test=\"groupBySor != null\"> "
+        + ", o.VALUE as SOR_VALUE "
+        + "</if> "
+        + groupByPorIfActive()
+        + groupBySorIfActive()
         + "FROM TASK t "
         + "<if test=\"joinWithAttachments\">"
         + "LEFT JOIN ATTACHMENT a ON t.ID = a.TASK_ID "
@@ -228,6 +242,8 @@ public class TaskQuerySqlProvider {
         + checkForAuthorization()
         + commonTaskWhereStatement()
         + CLOSING_WHERE_TAG
+        + closeOuterClauseForAggregatingByPor()
+        + closeOuterClauseForAggregatingBySor()
         + CLOSING_SCRIPT_TAG;
   }
 
@@ -390,6 +406,104 @@ public class TaskQuerySqlProvider {
         + "GROUP by WORKBASKET_ID) f "
         + "WHERE MAX_READ = 1) "
         + "</if>";
+  }
+
+  private static String groupByPorIfActive() {
+    return "<if test=\"groupByPor\"> "
+        + ", ROW_NUMBER() OVER (PARTITION BY POR_VALUE "
+        + "<if test='!orderBy.isEmpty() and !orderBy.get(0).equals(\"POR_VALUE\")'>"
+        + "ORDER BY <foreach item='item' collection='orderBy' separator=',' >${item}</foreach>"
+        + "</if> "
+        + "<if test='orderBy.isEmpty() or orderBy.get(0).equals(\"POR_VALUE\")'>"
+        + "ORDER BY DUE"
+        + "</if> "
+        + ")"
+        + "AS rn"
+        + "</if> ";
+  }
+
+  private static String groupBySorIfActive() {
+    return "<if test='groupBySor != null'> "
+        + ", ROW_NUMBER() OVER (PARTITION BY o.VALUE "
+        + "<if test='!orderBy.isEmpty()'>"
+        + "ORDER BY <foreach item='item' collection='orderBy' separator=',' >${item}</foreach>"
+        + "</if> "
+        + "<if test='orderBy.isEmpty()'>"
+        + "ORDER BY DUE"
+        + "</if> "
+        + ")"
+        + "AS rn"
+        + "</if> ";
+  }
+
+  private static String openOuterClauseForAggregatingByPorOrSor() {
+    return "<if test=\"groupByPor or groupBySor != null\"> "
+        + "SELECT * FROM ("
+        + "</if> ";
+  }
+
+  private static String closeOuterClauseForAggregatingByPor() {
+    return "<if test=\"groupByPor\"> "
+        + ") t LEFT JOIN"
+        + " (SELECT POR_VALUE, COUNT(POR_VALUE) AS R_COUNT "
+        + "FROM TASK t"
+        + "<if test=\"joinWithAttachments\">"
+        + "LEFT JOIN ATTACHMENT a ON t.ID = a.TASK_ID "
+        + "</if>"
+        + "<if test=\"joinWithSecondaryObjectReferences\">"
+        + "LEFT JOIN OBJECT_REFERENCE o ON t.ID = o.TASK_ID "
+        + "</if>"
+        + "<if test=\"joinWithClassifications\">"
+        + "LEFT JOIN CLASSIFICATION c ON t.CLASSIFICATION_ID = c.ID "
+        + "</if>"
+        + "<if test=\"joinWithAttachmentClassifications\">"
+        + "LEFT JOIN CLASSIFICATION ac ON a.CLASSIFICATION_ID = ac.ID "
+        + "</if>"
+        + "<if test=\"joinWithWorkbaskets\">"
+        + "LEFT JOIN WORKBASKET w ON t.WORKBASKET_ID = w.ID "
+        + "</if>"
+        + "<if test=\"joinWithUserInfo\">"
+        + "LEFT JOIN USER_INFO u ON t.owner = u.USER_ID "
+        + "</if>"
+        + OPENING_WHERE_TAG
+        + checkForAuthorization()
+        + commonTaskWhereStatement()
+        + "<if test='selectAndClaim == true'> AND t.STATE = 'READY' </if>"
+        + CLOSING_WHERE_TAG
+        + "GROUP BY POR_VALUE) AS u ON t.POR_VALUE=u.POR_VALUE "
+        + "WHERE rn = 1"
+        + "</if> ";
+  }
+
+  private static String closeOuterClauseForAggregatingBySor() {
+    return "<if test='groupBySor != null'> "
+        + ") t LEFT JOIN"
+        + " (SELECT o.VALUE, COUNT(o.VALUE) AS R_COUNT "
+        + "FROM TASK t "
+        + "LEFT JOIN OBJECT_REFERENCE o on t.ID=o.TASK_ID "
+        + "<if test=\"joinWithAttachments\">"
+        + "LEFT JOIN ATTACHMENT a ON t.ID = a.TASK_ID "
+        + "</if>"
+        + "<if test=\"joinWithClassifications\">"
+        + "LEFT JOIN CLASSIFICATION c ON t.CLASSIFICATION_ID = c.ID "
+        + "</if>"
+        + "<if test=\"joinWithAttachmentClassifications\">"
+        + "LEFT JOIN CLASSIFICATION ac ON a.CLASSIFICATION_ID = ac.ID "
+        + "</if>"
+        + "<if test=\"joinWithWorkbaskets\">"
+        + "LEFT JOIN WORKBASKET w ON t.WORKBASKET_ID = w.ID "
+        + "</if>"
+        + "<if test=\"joinWithUserInfo\">"
+        + "LEFT JOIN USER_INFO u ON t.owner = u.USER_ID "
+        + "</if>"
+        + OPENING_WHERE_TAG
+        + checkForAuthorization()
+        + commonTaskWhereStatement()
+        + "AND o.TYPE=#{groupBySor} "
+        + CLOSING_WHERE_TAG
+        + "GROUP BY o.VALUE) AS u ON t.SOR_VALUE=u.VALUE "
+        + "WHERE rn = 1"
+        + "</if> ";
   }
 
   private static String commonTaskObjectReferenceWhereStatement() {

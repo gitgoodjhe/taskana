@@ -289,6 +289,8 @@ class TaskanaConfigurationTest {
       boolean expectedAddAdditionalUserInfo = true;
       Set<WorkbasketPermission> expectedMinimalPermissionsToAssignDomains =
           Set.of(WorkbasketPermission.CUSTOM_2);
+      // database configuration
+      boolean expectedCommonQueryUsageEnforce = true;
 
       // when
       TaskanaConfiguration configuration =
@@ -346,6 +348,7 @@ class TaskanaConfigurationTest {
               // user configuration
               .addAdditionalUserInfo(expectedAddAdditionalUserInfo)
               .minimalPermissionsToAssignDomains(expectedMinimalPermissionsToAssignDomains)
+              .commonQueryUsageEnforce(expectedCommonQueryUsageEnforce)
               .build();
 
       // then
@@ -478,6 +481,8 @@ class TaskanaConfigurationTest {
               // user configuration
               .addAdditionalUserInfo(true)
               .minimalPermissionsToAssignDomains(Set.of(WorkbasketPermission.CUSTOM_2))
+              //database configuration
+              .commonQueryUsageEnforce(true)
               .build();
 
       TaskanaConfiguration copyConfiguration = new Builder(configuration).build();

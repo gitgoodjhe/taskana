@@ -161,6 +161,11 @@ public class TaskBuilder implements SummaryEntityBuilder<TaskSummary, Task, Task
     return this;
   }
 
+  public TaskBuilder groupByCount(Integer count) {
+    testTask.setGroupByCount(count);
+    return this;
+  }
+
   public TaskBuilder attachments(Attachment... attachments) {
     testTask.setAttachments(Arrays.asList(attachments));
     return this;
