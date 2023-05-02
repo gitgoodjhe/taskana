@@ -1279,6 +1279,113 @@ class TaskQueryImplAccTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
+    class ClassificationParentName {
+
+      WorkbasketSummary wb;
+      TaskSummary taskSummary1;
+      TaskSummary taskSummary2;
+      TaskSummary taskSummary3;
+
+      @WithAccessId(user = "user-1-1")
+      @BeforeAll
+      void setup() throws Exception {
+        wb = createWorkbasketWithPermission();
+        defaultTestClassification()
+            .key("L41111")
+            .name("Classification_A")
+            .buildAndStore(classificationService, "businessadmin");
+
+        defaultTestClassification()
+            .key("L41112")
+            .name("Classification_B")
+            .buildAndStore(classificationService, "businessadmin");
+
+        defaultTestClassification()
+            .key("L41113")
+            .name("Classification_C")
+            .buildAndStore(classificationService, "businessadmin");
+
+        ClassificationSummary class1 =
+            defaultTestClassification()
+                .key("L4050")
+                .name("Child_Classification_A")
+                .parentKey("L41111")
+                .buildAndStore(classificationService, "businessadmin");
+        taskSummary1 =
+            taskInWorkbasket(wb).classificationSummary(class1).buildAndStoreAsSummary(taskService);
+        ClassificationSummary class2 =
+            defaultTestClassification()
+                .key("L40501")
+                .name("Child_Classification_B")
+                .parentKey("L41112")
+                .buildAndStore(classificationService, "businessadmin");
+        taskSummary2 =
+            taskInWorkbasket(wb).classificationSummary(class2).buildAndStoreAsSummary(taskService);
+        ClassificationSummary class3 =
+            defaultTestClassification()
+                .key("L4111")
+                .name("Child_Classification_C")
+                .parentKey("L41113")
+                .buildAndStore(classificationService, "businessadmin");
+        taskSummary3 =
+            taskInWorkbasket(wb).classificationSummary(class3).buildAndStoreAsSummary(taskService);
+      }
+
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForParentNameIn() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameIn("Classification_A")
+                .list();
+
+        assertThat(list).containsExactly(taskSummary1);
+      }
+
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForNameParentNotIn() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameNotIn("Classification_B")
+                .list();
+
+        assertThat(list).containsExactlyInAnyOrder(taskSummary1, taskSummary3);
+      }
+
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForParentNameLike() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameLike("%_B")
+                .list();
+
+        assertThat(list).containsExactlyInAnyOrder(taskSummary2);
+      }
+
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForNameParentNotLike() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameNotLike("%_A")
+                .list();
+
+        assertThat(list).containsExactlyInAnyOrder(taskSummary2, taskSummary3);
+      }
+    }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
     class ClassificationCategory {
 
       WorkbasketSummary wb;

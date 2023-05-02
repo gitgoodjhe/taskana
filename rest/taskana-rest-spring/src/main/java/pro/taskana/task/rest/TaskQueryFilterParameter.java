@@ -582,6 +582,38 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
   @JsonProperty("classification-parent-key-not-like")
   private final String[] classificationParentKeyNotLike;
   // endregion
+
+  // region classificationParentName
+  /**
+   * Filter by the name of the parent Classification of the Classification of the Task. This is an
+   * exact match.
+   */
+  @JsonProperty("classification-parent-name")
+  private final String[] classificationParentNameIn;
+
+  /**
+   * Filter by what the name of the parent Classification of the Classification of the Task
+   * shouldn't be. This is an exact match.
+   */
+  @JsonProperty("classification-parent-name-not")
+  private final String[] classificationParentNameNotIn;
+
+  /**
+   * Filter by the name of the parent Classification of the Classification of the Task. This results
+   * in a substring search (% is appended to the front and end of the requested value). Further SQL
+   * "LIKE" wildcard characters will be resolved correctly.
+   */
+  @JsonProperty("classification-parent-name-like")
+  private final String[] classificationParentNameLike;
+
+  /**
+   * Filter by what the name of the parent Classification of the Classification of the Task
+   * shouldn't be. This results in a substring search (% is appended to the front and end of the
+   * requested value). Further SQL "LIKE" wildcard characters will be resolved correctly.
+   */
+  @JsonProperty("classification-parent-name-not-like")
+  private final String[] classificationParentNameNotLike;
+  // endregion
   // region classificationCategory
   /** Filter by the classification category of the Task. This is an exact match. */
   @JsonProperty("classification-category")
@@ -1234,6 +1266,10 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
     "classification-parent-key-not",
     "classification-parent-key-like",
     "classification-parent-key-not-like",
+    "classification-parent-name",
+    "classification-parent-name-not",
+    "classification-parent-name-like",
+    "classification-parent-name-not-like",
     "classification-category",
     "classification-category-not",
     "classification-category-like",
@@ -1390,6 +1426,10 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
       String[] classificationParentKeyNotIn,
       String[] classificationParentKeyLike,
       String[] classificationParentKeyNotLike,
+      String[] classificationParentNameIn,
+      String[] classificationParentNameNotIn,
+      String[] classificationParentNameLike,
+      String[] classificationParentNameNotLike,
       String[] classificationCategoryIn,
       String[] classificationCategoryNotIn,
       String[] classificationCategoryLike,
@@ -1545,6 +1585,10 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
     this.classificationParentKeyNotIn = classificationParentKeyNotIn;
     this.classificationParentKeyLike = classificationParentKeyLike;
     this.classificationParentKeyNotLike = classificationParentKeyNotLike;
+    this.classificationParentNameIn = classificationParentNameIn;
+    this.classificationParentNameNotIn = classificationParentNameNotIn;
+    this.classificationParentNameLike = classificationParentNameLike;
+    this.classificationParentNameNotLike = classificationParentNameNotLike;
     this.classificationCategoryIn = classificationCategoryIn;
     this.classificationCategoryNotIn = classificationCategoryNotIn;
     this.classificationCategoryLike = classificationCategoryLike;
@@ -1789,6 +1833,16 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
     Optional.ofNullable(classificationParentKeyNotLike)
         .map(this::wrapElementsInLikeStatement)
         .ifPresent(query::classificationParentKeyNotLike);
+
+    Optional.ofNullable(classificationParentNameIn).ifPresent(query::classificationParentNameIn);
+    Optional.ofNullable(classificationParentNameNotIn)
+        .ifPresent(query::classificationParentNameNotIn);
+    Optional.ofNullable(classificationParentNameLike)
+        .map(this::wrapElementsInLikeStatement)
+        .ifPresent(query::classificationParentNameLike);
+    Optional.ofNullable(classificationParentNameNotLike)
+        .map(this::wrapElementsInLikeStatement)
+        .ifPresent(query::classificationParentNameNotLike);
 
     Optional.ofNullable(classificationCategoryIn).ifPresent(query::classificationCategoryIn);
     Optional.ofNullable(classificationCategoryNotIn).ifPresent(query::classificationCategoryNotIn);

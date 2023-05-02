@@ -30,6 +30,7 @@ public class TaskQuerySqlProvider {
         + ", a.CLASSIFICATION_ID, a.CLASSIFICATION_KEY, a.CHANNEL, a.REF_VALUE, a.RECEIVED"
         + "</if>"
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, c.NAME </if>"
+        + "<if test=\"addClassificationParentNameToSelectClauseForOrdering\">, cp.NAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ac.NAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w.NAME </if>"
         + "<if test=\"joinWithUserInfo\">, u.LONG_NAME </if>"
@@ -42,6 +43,9 @@ public class TaskQuerySqlProvider {
         + "</if>"
         + "<if test=\"joinWithClassifications\">"
         + "LEFT JOIN CLASSIFICATION c ON t.CLASSIFICATION_ID = c.ID "
+        + "</if>"
+        + "<if test=\"joinWithClassificationParent\">"
+        + "LEFT JOIN CLASSIFICATION cp ON c.PARENT_ID = cp.ID "
         + "</if>"
         + "<if test=\"joinWithAttachmentClassifications\">"
         + "LEFT JOIN CLASSIFICATION ac ON a.CLASSIFICATION_ID = ac.ID "
@@ -79,6 +83,7 @@ public class TaskQuerySqlProvider {
         + ", a.CLASSIFICATION_ID, a.CLASSIFICATION_KEY, a.CHANNEL, a.REF_VALUE, a.RECEIVED"
         + "</if>"
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, c.NAME </if>"
+        + "<if test=\"addClassificationParentNameToSelectClauseForOrdering\">, cp.NAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ac.NAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w.NAME </if>"
         + "<if test=\"joinWithUserInfo\">, u.LONG_NAME </if>"
@@ -91,6 +96,9 @@ public class TaskQuerySqlProvider {
         + "</if>"
         + "<if test=\"joinWithClassifications\">"
         + "LEFT JOIN CLASSIFICATION c ON t.CLASSIFICATION_ID = c.ID "
+        + "</if>"
+        + "<if test=\"joinWithClassificationParent\">"
+        + "LEFT JOIN CLASSIFICATION cp ON c.PARENT_ID = cp.ID "
         + "</if>"
         + "<if test=\"joinWithAttachmentClassifications\">"
         + "LEFT JOIN CLASSIFICATION ac ON a.CLASSIFICATION_ID = ac.ID "
@@ -154,6 +162,7 @@ public class TaskQuerySqlProvider {
         + ", a2.CLASSIFICATION_ID, a2.CLASSIFICATION_KEY, a2.CHANNEL, a2.REF_VALUE, a2.RECEIVED"
         + "</if>"
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, c2.NAME </if>"
+        + "<if test=\"addClassificationParentNameToSelectClauseForOrdering\">, cp.NAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ac2.NAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w2.NAME </if>"
         + "<if test=\"joinWithUserInfo\">, u2.LONG_NAME </if>"
@@ -175,6 +184,9 @@ public class TaskQuerySqlProvider {
         + "ON t.ID = o.TASK_ID </if>"
         + "<if test=\"joinWithClassifications\">LEFT JOIN CLASSIFICATION c "
         + "ON t.CLASSIFICATION_ID = c.ID </if>"
+        + "<if test=\"joinWithClassificationParent\">"
+        + "LEFT JOIN CLASSIFICATION cp ON c.PARENT_ID = cp.ID "
+        + "</if>"
         + "<if test=\"joinWithAttachmentClassifications\">LEFT JOIN CLASSIFICATION ac "
         + "ON a.CLASSIFICATION_ID = ac.ID </if>"
         + "<if test=\"joinWithWorkbaskets\">LEFT JOIN WORKBASKET w "
@@ -352,6 +364,7 @@ public class TaskQuerySqlProvider {
         + "CUSTOM_INT_1, CUSTOM_INT_2, CUSTOM_INT_3,  CUSTOM_INT_4,  CUSTOM_INT_5, "
         + "CUSTOM_INT_6, CUSTOM_INT_7, CUSTOM_INT_8"
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, CNAME</if>"
+        + "<if test=\"addClassificationParentNameToSelectClauseForOrdering\">, CPNAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, ACNAME</if>"
         + "<if test=\"addAttachmentColumnsToSelectClauseForOrdering\">"
         + ", ACLASSIFICATION_ID, ACLASSIFICATION_KEY, CHANNEL, REF_VALUE, ARECEIVED"
@@ -444,6 +457,7 @@ public class TaskQuerySqlProvider {
     commonWhereClauses("classificationCategory", "CLASSIFICATION_CATEGORY", sb);
     commonWhereClauses("classificationKey", "t.CLASSIFICATION_KEY", sb);
     commonWhereClauses("classificationParentKey", "c.PARENT_KEY", sb);
+    commonWhereClauses("classificationParentName", "cp.NAME", sb);
     commonWhereClauses("classificationName", "c.NAME", sb);
     commonWhereClauses("creator", "t.CREATOR", sb);
     commonWhereClauses("name", "t.NAME", sb);

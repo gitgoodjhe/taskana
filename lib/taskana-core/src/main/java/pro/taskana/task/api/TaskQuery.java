@@ -643,6 +643,46 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   TaskQuery classificationParentKeyNotLike(String... classificationParentKeys);
 
   // endregion
+
+  // region classificationParentName
+
+  /**
+   * Add these names of the parent Classification to your query.
+   *
+   * @param classificationParentNames the classification parent names
+   * @return the query
+   */
+  TaskQuery classificationParentNameIn(String... classificationParentNames);
+
+  /**
+   * Exclude these names of the parent Classification from your query.
+   *
+   * @param classificationParentNames the names of the parent Classifications
+   * @return the query
+   */
+  TaskQuery classificationParentNameNotIn(String... classificationParentNames);
+
+  /**
+   * Add these names of the parent Classification for pattern matching to your query. It will be
+   * compared in SQL with the LIKE operator. You may use a wildcard like % to specify the pattern.
+   * If you specify multiple arguments they are combined with the OR keyword.
+   *
+   * @param classificationParentNames the names of the parent Classification
+   * @return the query
+   */
+  TaskQuery classificationParentNameLike(String... classificationParentNames);
+
+  /**
+   * Exclude these names of the parent Classification for pattern matching from your query. It will
+   * be compared in SQL with the LIKE operator. You may use a wildcard like % to specify the
+   * pattern. If you specify multiple arguments they are combined with the OR keyword.
+   *
+   * @param classificationParentNames the names of the parent Classification
+   * @return the query
+   */
+  TaskQuery classificationParentNameNotLike(String... classificationParentNames);
+
+  // endregion
   // region classificationCategory
 
   /**
@@ -728,6 +768,15 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
    * @return the query
    */
   TaskQuery orderByClassificationName(SortDirection sortDirection);
+
+  /**
+   * This method sorts the query result according to the classification parent name.
+   *
+   * @param sortDirection Determines whether the result is sorted in ascending or descending order.
+   *     If sortDirection is null, the result is sorted in ascending order
+   * @return the query
+   */
+  TaskQuery orderByClassificationParentName(SortDirection sortDirection);
 
   // endregion
   // region workbasketId

@@ -233,9 +233,7 @@ public interface TaskService {
    *     WorkbasketPermission#READ} for the {@linkplain Workbasket} the {@linkplain Task} is in
    */
   Task forceCancelClaim(String taskId)
-      throws TaskNotFoundException,
-          NotAuthorizedOnWorkbasketException,
-          InvalidTaskStateException;
+      throws TaskNotFoundException, NotAuthorizedOnWorkbasketException, InvalidTaskStateException;
 
   /**
    * Request review for an existing {@linkplain Task} that is in {@linkplain TaskState#CLAIMED}.
