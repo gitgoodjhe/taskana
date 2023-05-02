@@ -1284,7 +1284,7 @@ class TaskQueryImplAccTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
-    class PorAndSorSearch {
+    class ClassificationParentName {
 
       WorkbasketSummary wb;
       TaskSummary taskSummary1;
@@ -1336,41 +1336,58 @@ class TaskQueryImplAccTest {
             taskInWorkbasket(wb).classificationSummary(class3).buildAndStoreAsSummary(taskService);
       }
 
-    @WithAccessId(user = "admin")
-    @Test
-    void should_ApplyFilter_When_QueryingForNameParentNotLike1() throws Exception {
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForParentNameIn() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameIn("Classification_A")
+                .list();
 
-        ObjectReference obj1 = ObjectReferenceBuilder.newObjectReference().value("abc").type("cde").system("def").systemInstance("ghi").company("jkl").build();
-      ObjectReference obj2 = ObjectReferenceBuilder.newObjectReference().value("abc").type("cde").system("def").systemInstance("ghi").company("jkl").build();
+        assertThat(list).containsExactly(taskSummary1);
+      }
 
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForNameParentNotIn() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameNotIn("Classification_B")
+                .list();
 
-      taskSummary1 =
-          taskInWorkbasket(wb).objectReferences(obj1).buildAndStoreAsSummary(taskService);
+        assertThat(list).containsExactlyInAnyOrder(taskSummary1, taskSummary3);
+      }
 
-      taskSummary2 =
-          taskInWorkbasket(wb).primaryObjRef(obj2).buildAndStoreAsSummary(taskService);
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForParentNameLike() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameLike("%_B")
+                .list();
 
-      List<TaskSummary> list1 =
-          taskService
-              .createTaskQuery()
-              .sorValueIn("abc")
-              .list();
+        assertThat(list).containsExactlyInAnyOrder(taskSummary2);
+      }
 
-      List<TaskSummary> list =
-          taskService
-              .createTaskQuery()
-              .porOrSorValueLike("%abc%","%ue%")
-              .list();
+      @WithAccessId(user = "user-1-1")
+      @Test
+      void should_ApplyFilter_When_QueryingForNameParentNotLike() {
+        List<TaskSummary> list =
+            taskService
+                .createTaskQuery()
+                .workbasketIdIn(wb.getId())
+                .classificationParentNameNotLike("%_A")
+                .list();
 
-      TaskBuilder.newTask().objectReferences();
-
-      list.forEach(taskSummary -> System.out.println(taskSummary.getPrimaryObjRef().getValue()));
-
-     System.out.println(list.size());
+        assertThat(list).containsExactlyInAnyOrder(taskSummary2, taskSummary3);
+      }
     }
-    }
-
-
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)

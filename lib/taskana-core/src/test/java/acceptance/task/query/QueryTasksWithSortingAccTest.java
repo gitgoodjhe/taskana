@@ -415,6 +415,64 @@ class QueryTasksWithSortingAccTest extends AbstractAccTest {
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
+    class ClassificationParentName {
+      @WithAccessId(user = "admin")
+      @Test
+      void should_OrderByClassificationParentNameDesc() {
+        List<TaskSummary> results =
+            taskanaEngine
+                .getTaskService()
+                .createTaskQuery()
+                .classificationParentNameIn("BUZ-Leistungsfall", "Dynamikänderung")
+                .orderByClassificationParentName(DESCENDING)
+                .list();
+
+        // Can't directly make an assertion for classification parent name, because it is not
+        // directly available in the results list.
+        // Therefore this assertion is made with help of the task.sql and classification.sql files
+        // and the expected result from them
+        // Changes in these files might break this test, therefore it should be migrated to the test
+        // API
+        assertThat(results)
+            .hasSize(3)
+            .extracting(TaskSummary::getClassificationSummary)
+            .extracting(ClassificationSummary::getId)
+            .containsExactly(
+                "CLI:100000000000000000000000000000000005",
+                "CLI:100000000000000000000000000000000005",
+                "CLI:200000000000000000000000000000000001");
+      }
+
+      @WithAccessId(user = "admin")
+      @Test
+      void should_OrderByClassificationParentNameAsc() {
+        List<TaskSummary> results =
+            taskanaEngine
+                .getTaskService()
+                .createTaskQuery()
+                .classificationParentNameIn("BUZ-Leistungsfall", "Dynamikänderung")
+                .orderByClassificationParentName(ASCENDING)
+                .list();
+
+        // Can't directly make an assertion for classification parent name, because it is not
+        // directly available in the results list.
+        // Therefore this assertion is made with help of the task.sql and classification.sql files
+        // and the expected result from them
+        // Changes in these files might break this test, therefore it should be migrated to the test
+        // API
+        assertThat(results)
+            .hasSize(3)
+            .extracting(TaskSummary::getClassificationSummary)
+            .extracting(ClassificationSummary::getId)
+            .containsExactly(
+                "CLI:200000000000000000000000000000000001",
+                "CLI:100000000000000000000000000000000005",
+                "CLI:100000000000000000000000000000000005");
+      }
+    }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
     class WorkbasketId {
       @WithAccessId(user = "admin")
       @Test

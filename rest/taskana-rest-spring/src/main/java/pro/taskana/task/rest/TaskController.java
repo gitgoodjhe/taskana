@@ -713,6 +713,7 @@ public class TaskController {
   public enum TaskQuerySortBy implements QuerySortBy<TaskQuery> {
     CLASSIFICATION_KEY(TaskQuery::orderByClassificationKey),
     CLASSIFICATION_NAME(TaskQuery::orderByClassificationName),
+    CLASSIFICATION_PARENT_NAME(TaskQuery::orderByClassificationParentName),
     POR_TYPE(TaskQuery::orderByPrimaryObjectReferenceType),
     POR_VALUE(TaskQuery::orderByPrimaryObjectReferenceValue),
     POR_COMPANY(TaskQuery::orderByPrimaryObjectReferenceCompany),

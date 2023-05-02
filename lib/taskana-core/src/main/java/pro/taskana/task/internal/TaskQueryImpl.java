@@ -62,10 +62,12 @@ public class TaskQueryImpl implements TaskQuery {
   private boolean joinWithAttachments = false;
   private boolean joinWithSecondaryObjectReferences = false;
   private boolean joinWithClassifications = false;
+  private boolean joinWithClassificationParent = false;
   private boolean joinWithAttachmentClassifications = false;
   private boolean joinWithWorkbaskets = false;
   private boolean addAttachmentColumnsToSelectClauseForOrdering = false;
   private boolean addClassificationNameToSelectClauseForOrdering = false;
+  private boolean addClassificationParentNameToSelectClauseForOrdering = false;
   private boolean addAttachmentClassificationNameToSelectClauseForOrdering = false;
   private boolean addWorkbasketNameToSelectClauseForOrdering = false;
   private boolean joinWithUserInfo;
@@ -117,6 +119,10 @@ public class TaskQueryImpl implements TaskQuery {
   private String[] classificationParentKeyNotIn;
   private String[] classificationParentKeyLike;
   private String[] classificationParentKeyNotLike;
+  private String[] classificationParentNameIn;
+  private String[] classificationParentNameNotIn;
+  private String[] classificationParentNameLike;
+  private String[] classificationParentNameNotLike;
   private String[] classificationCategoryIn;
   private String[] classificationCategoryNotIn;
   private String[] classificationCategoryLike;
@@ -722,6 +728,38 @@ public class TaskQueryImpl implements TaskQuery {
   }
 
   @Override
+  public TaskQuery classificationParentNameIn(String... classificationParentNames) {
+    this.classificationParentNameIn = classificationParentNames;
+    this.joinWithClassifications = true;
+    this.joinWithClassificationParent = true;
+    return this;
+  }
+
+  @Override
+  public TaskQuery classificationParentNameNotIn(String... classificationParentNames) {
+    this.classificationParentNameNotIn = classificationParentNames;
+    this.joinWithClassifications = true;
+    this.joinWithClassificationParent = true;
+    return this;
+  }
+
+  @Override
+  public TaskQuery classificationParentNameLike(String... classificationParentNames) {
+    this.classificationParentNameLike = toLowerCopy(classificationParentNames);
+    this.joinWithClassifications = true;
+    this.joinWithClassificationParent = true;
+    return this;
+  }
+
+  @Override
+  public TaskQuery classificationParentNameNotLike(String... classificationParentNames) {
+    this.classificationParentNameNotLike = toLowerCopy(classificationParentNames);
+    this.joinWithClassifications = true;
+    this.joinWithClassificationParent = true;
+    return this;
+  }
+
+  @Override
   public TaskQuery classificationCategoryIn(String... classificationCategories) {
     this.classificationCategoryIn = classificationCategories;
     this.joinWithClassifications = true;
@@ -782,6 +820,16 @@ public class TaskQueryImpl implements TaskQuery {
             && taskanaEngine.getEngine().getConfiguration().isUseSpecificDb2Taskquery())
         ? addOrderCriteria("CNAME", sortDirection)
         : addOrderCriteria("c.NAME", sortDirection);
+  }
+
+  @Override
+  public TaskQuery orderByClassificationParentName(SortDirection sortDirection) {
+    joinWithClassifications = true;
+    joinWithClassificationParent = true;
+    addClassificationParentNameToSelectClauseForOrdering = true;
+    return DB.DB2 == getDB()
+        ? addOrderCriteria("CPNAME", sortDirection)
+        : addOrderCriteria("cp.NAME", sortDirection);
   }
 
   @Override
