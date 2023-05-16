@@ -204,6 +204,8 @@ public class TaskQueryImpl implements TaskQuery {
   private String[] sorSystemInstanceLike;
   private String[] sorTypeIn;
   private String[] sorTypeLike;
+
+  private String[] porOrSorValueLike;
   private String[] custom1In;
   private boolean custom1InContainsNull;
   private String[] custom1NotIn;
@@ -1408,6 +1410,18 @@ public class TaskQueryImpl implements TaskQuery {
   }
 
   @Override
+  public TaskQuery porOrSorValueLike(String... values) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorValueLike = toLowerCopy(values);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorValueNotLike(String... values) {
+    return null;
+  }
+
+  @Override
   public TaskQuery customAttributeIn(TaskCustomField customField, String... strings)
       throws InvalidArgumentException {
     if (strings.length == 0) {
@@ -2579,6 +2593,8 @@ public class TaskQueryImpl implements TaskQuery {
         + Arrays.toString(sorTypeIn)
         + ", sorTypeLike="
         + Arrays.toString(sorTypeLike)
+        + ", porOrSorValueLike="
+        + Arrays.toString(porOrSorValueLike)
         + ", sorValueIn="
         + Arrays.toString(sorValueIn)
         + ", sorValueLike="

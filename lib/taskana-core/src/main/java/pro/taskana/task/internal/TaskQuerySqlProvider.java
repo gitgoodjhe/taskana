@@ -545,6 +545,10 @@ public class TaskQuerySqlProvider {
             + "</foreach>)"
             + "</if> ");
     sb.append("<if test='withoutAttachment'> AND a.ID IS NULL</if> ");
+    sb.append(
+        "<if test='porOrSorValueLike != null'>AND (<foreach item='item'"
+            + " collection='porOrSorValueLike' separator=' OR '>(t.POR_VALUE LIKE"
+            + " #{item} OR o.VALUE LIKE #{item})</foreach>)</if> ");
     sb.append(commonTaskObjectReferenceWhereStatement());
     sb.append(commonTaskSecondaryObjectReferencesWhereStatement());
     return sb;

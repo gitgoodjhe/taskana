@@ -38,6 +38,7 @@ import pro.taskana.task.api.WildcardSearchField;
 import pro.taskana.task.api.models.Attachment;
 import pro.taskana.task.api.models.ObjectReference;
 import pro.taskana.task.api.models.TaskSummary;
+import pro.taskana.task.internal.models.ObjectReferenceImpl;
 import pro.taskana.testapi.TaskanaInject;
 import pro.taskana.testapi.TaskanaIntegrationTest;
 import pro.taskana.testapi.builder.ObjectReferenceBuilder;
@@ -1276,6 +1277,96 @@ class TaskQueryImplAccTest {
         assertThat(list).containsExactlyInAnyOrder(taskSummary1);
       }
     }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    class PorAndSorSearch {
+
+      WorkbasketSummary wb;
+      TaskSummary taskSummary1;
+      TaskSummary taskSummary2;
+      TaskSummary taskSummary3;
+
+      @WithAccessId(user = "user-1-1")
+      @BeforeAll
+      void setup() throws Exception {
+        wb = createWorkbasketWithPermission();
+        defaultTestClassification()
+            .key("L41111")
+            .name("Classification_A")
+            .buildAndStore(classificationService, "businessadmin");
+
+        defaultTestClassification()
+            .key("L41112")
+            .name("Classification_B")
+            .buildAndStore(classificationService, "businessadmin");
+
+        defaultTestClassification()
+            .key("L41113")
+            .name("Classification_C")
+            .buildAndStore(classificationService, "businessadmin");
+
+        ClassificationSummary class1 =
+            defaultTestClassification()
+                .key("L4050")
+                .name("Child_Classification_A")
+                .parentKey("L41111")
+                .buildAndStore(classificationService, "businessadmin");
+        taskSummary1 =
+            taskInWorkbasket(wb).classificationSummary(class1).buildAndStoreAsSummary(taskService);
+        ClassificationSummary class2 =
+            defaultTestClassification()
+                .key("L40501")
+                .name("Child_Classification_B")
+                .parentKey("L41112")
+                .buildAndStore(classificationService, "businessadmin");
+        taskSummary2 =
+            taskInWorkbasket(wb).classificationSummary(class2).buildAndStoreAsSummary(taskService);
+        ClassificationSummary class3 =
+            defaultTestClassification()
+                .key("L4111")
+                .name("Child_Classification_C")
+                .parentKey("L41113")
+                .buildAndStore(classificationService, "businessadmin");
+        taskSummary3 =
+            taskInWorkbasket(wb).classificationSummary(class3).buildAndStoreAsSummary(taskService);
+      }
+
+    @WithAccessId(user = "admin")
+    @Test
+    void should_ApplyFilter_When_QueryingForNameParentNotLike1() throws Exception {
+
+        ObjectReference obj1 = ObjectReferenceBuilder.newObjectReference().value("abc").type("cde").system("def").systemInstance("ghi").company("jkl").build();
+      ObjectReference obj2 = ObjectReferenceBuilder.newObjectReference().value("abc").type("cde").system("def").systemInstance("ghi").company("jkl").build();
+
+
+      taskSummary1 =
+          taskInWorkbasket(wb).objectReferences(obj1).buildAndStoreAsSummary(taskService);
+
+      taskSummary2 =
+          taskInWorkbasket(wb).primaryObjRef(obj2).buildAndStoreAsSummary(taskService);
+
+      List<TaskSummary> list1 =
+          taskService
+              .createTaskQuery()
+              .sorValueIn("abc")
+              .list();
+
+      List<TaskSummary> list =
+          taskService
+              .createTaskQuery()
+              .porOrSorValueLike("%abc%","%ue%")
+              .list();
+
+      TaskBuilder.newTask().objectReferences();
+
+      list.forEach(taskSummary -> System.out.println(taskSummary.getPrimaryObjRef().getValue()));
+
+     System.out.println(list.size());
+    }
+    }
+
+
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
