@@ -198,6 +198,16 @@ public class TaskQueryImpl implements TaskQuery {
   private String[] sorSystemInstanceLike;
   private String[] sorTypeIn;
   private String[] sorTypeLike;
+  private String[] porOrSorCompanyIn;
+  private String[] porOrSorCompanyLike;
+  private String[] porOrSorSystemIn;
+  private String[] porOrSorSystemLike;
+  private String[] porOrSorSystemInstanceIn;
+  private String[] porOrSorSystemInstanceLike;
+  private String[] porOrSorTypeIn;
+  private String[] porOrSorTypeLike;
+  private String[] porOrSorValueIn;
+  private String[] porOrSorValueLike;
   private String[] custom1In;
   private boolean custom1InContainsNull;
   private String[] custom1NotIn;
@@ -1353,9 +1363,77 @@ public class TaskQueryImpl implements TaskQuery {
     return this;
   }
 
+  @Override
   public TaskQuery sorValueLike(String... values) {
     joinWithSecondaryObjectReferences = true;
     sorValueLike = toLowerCopy(values);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorCompanyIn(String... companies) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorCompanyIn = toLowerCopy(companies);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorCompanyLike(String... companies) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorCompanyLike = toLowerCopy(companies);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemIn(String... systems) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorSystemIn = toLowerCopy(systems);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemLike(String... systems) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorSystemLike = toLowerCopy(systems);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemInstanceIn(String... systemInstances) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorSystemInstanceIn = toLowerCopy(systemInstances);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemInstanceLike(String... systemInstances) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorSystemInstanceLike = toLowerCopy(systemInstances);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorTypeIn(String... types) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorTypeIn = toLowerCopy(types);
+    return this;
+  }
+
+  @Override
+  public TaskQuery porOrSorTypeLike(String... types) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorTypeLike = toLowerCopy(types);
+    return this;
+  }
+  @Override
+  public TaskQuery porOrSorValueIn(String... values) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorValueIn = toLowerCopy(values);
+    return this;
+  }
+  public TaskQuery porOrSorValueLike(String... values) {
+    joinWithSecondaryObjectReferences = true;
+    porOrSorValueLike = toLowerCopy(values);
     return this;
   }
 
@@ -2531,6 +2609,8 @@ public class TaskQueryImpl implements TaskQuery {
         + Arrays.toString(sorTypeIn)
         + ", sorTypeLike="
         + Arrays.toString(sorTypeLike)
+        + ", porOrSorValueLike="
+        + Arrays.toString(porOrSorValueLike)
         + ", sorValueIn="
         + Arrays.toString(sorValueIn)
         + ", sorValueLike="

@@ -531,6 +531,35 @@ public class TaskQuerySqlProvider {
             + "</foreach>)"
             + "</if> ");
     sb.append("<if test='withoutAttachment'> AND a.ID IS NULL</if> ");
+    sb.append(
+        "<if test='porOrSorTypeIn != null'>AND ( "
+            +"t.POR_TYPE IN "
+            + "(<foreach item='item'"
+            + " collection='porOrSorTypeIn' separator=','>#{item}</foreach>)"
+            +" OR o.TYPE IN "
+            + "(<foreach item='item'"
+            + " collection='porOrSorTypeIn' separator=','>#{item}</foreach>)"
+            + ")</if>");
+    sb.append(
+        "<if test='porOrSorCompanyLike != null'>AND (<foreach item='item'"
+            + " collection='porOrSorCompanyLike' separator=' OR '>(t.POR_COMPANY LIKE"
+            + " #{item} OR o.COMPANY LIKE #{item})</foreach>)</if> ");
+    sb.append(
+        "<if test='porOrSorSystemLike != null'>AND (<foreach item='item'"
+            + " collection='porOrSorSystemLike' separator=' OR '>(t.POR_SYSTEM LIKE"
+            + " #{item} OR o.SYSTEM LIKE #{item})</foreach>)</if> ");
+    sb.append(
+        "<if test='porOrSorSystemInstanceLike != null'>AND (<foreach item='item'"
+            + " collection='porOrSorSystemInstanceLike' separator=' OR '>(t.POR_INSTANCE LIKE"
+            + " #{item} OR o.INSTANCE LIKE #{item})</foreach>)</if> ");
+    sb.append(
+        "<if test='porOrSorTypeLike != null'>AND (<foreach item='item'"
+            + " collection='porOrSorTypeLike' separator=' OR '>(t.POR_TYPE LIKE"
+            + " #{item} OR o.TYPE LIKE #{item})</foreach>)</if> ");
+    sb.append(
+        "<if test='porOrSorValueLike != null'>AND (<foreach item='item'"
+            + " collection='porOrSorValueLike' separator=' OR '>(t.POR_VALUE LIKE"
+            + " #{item} OR o.VALUE LIKE #{item})</foreach>)</if> ");
     sb.append(commonTaskObjectReferenceWhereStatement());
     sb.append(commonTaskSecondaryObjectReferencesWhereStatement());
     return sb;

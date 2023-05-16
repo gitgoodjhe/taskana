@@ -1665,8 +1665,149 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   TaskQuery sorValueIn(String... values);
 
   /**
+   * Add the values of {@linkplain ObjectReference#getValue value} of at least one of the {@linkplain
+   * Task#getSecondaryObjectReferences() secondaryobjectReferences} for pattern matching to your
+   * query. They will be compared in SQL with the LIKE operator. You may use a wildcard like % to
+   * specify the pattern. If you specify multiple arguments they are combined with the OR keyword.
+   *
+   * @param values the {@linkplain ObjectReference#getValue value} values of the searched-for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery sorValueLike(String... values);
+
+  /**
+   * Add the values of the {@linkplain ObjectReference#getCompany()  company} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
+   * to your query.
+   *
+   * @param companies the {@linkplain ObjectReference#getCompany() value} values of the searched-for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+
+  TaskQuery porOrSorCompanyIn(String... companies);
+
+  /**
+   * Add the values of {@linkplain ObjectReference#getCompany() company} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for pattern matching
+   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
+   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
+   * keyword.
+   *
+   * @param companies the {@linkplain ObjectReference#getCompany() company} values of the
+   *     searched-for {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorCompanyLike(String... companies);
+
+  // endregion
+  // region secondaryObjectReferenceSystem
+
+  /**
+   * Add the values of the {@linkplain ObjectReference#getSystem() system} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
+   * to your query.
+   *
+   * @param systems the {@linkplain ObjectReference#getSystem() system} values of the searched for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorSystemIn(String... systems);
+
+  /**
+   * Add the values of {@linkplain ObjectReference#getSystem system} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference}for pattern matching
+   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
+   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
+   * keyword.
+   *
+   * @param systems the {@linkplain ObjectReference#getSystem system} values of the searched-for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorSystemLike(String... systems);
+
+  // endregion
+  // region secondaryObjectReferenceSystemInstance
+
+  /**
+   * Add the values of the {@linkplain ObjectReference#getSystemInstance() systemInstance} of at
+   * least one of the {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for
+   * exact matching to your query.
+   *
+   * @param systemInstances the {@linkplain ObjectReference#getSystemInstance() systemInstance}
+   *     values of the searched for {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorSystemInstanceIn(String... systemInstances);
+
+  /**
+   * Add the values of {@linkplain ObjectReference#getSystemInstance() systemInstance} of at least
+   * one of the {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for
+   * pattern matching to your query. They will be compared in SQL with the LIKE operator. You may
+   * use a wildcard like % to specify the pattern. If you specify multiple arguments they are
+   * combined with the OR keyword.
+   *
+   * @param systemInstances the {@linkplain ObjectReference#getSystemInstance() systemInstance}
+   *     values of the searched-for {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorSystemInstanceLike(String... systemInstances);
+
+  // endregion
+  // region secondaryObjectReferenceType
+
+  /**
+   * Add the values of the {@linkplain ObjectReference#getType() type} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
+   * to your query.
+   *
+   * @param types the {@linkplain ObjectReference#getType() type} values of the searched for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorTypeIn(String... types);
+
+  /**
+   * Add the values of {@linkplain ObjectReference#getType type} of at least one of the {@linkplain
+   * Task#getSecondaryObjectReferences() secondaryobjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference}for pattern matching to your
+   * query. They will be compared in SQL with the LIKE operator. You may use a wildcard like % to
+   * specify the pattern. If you specify multiple arguments they are combined with the OR keyword.
+   *
+   * @param types the {@linkplain ObjectReference#getType type} values of the searched-for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorTypeLike(String... types);
+
+  // endregion
+  // region secondaryObjectReferenceValue
+
+  /**
+   * Add the values of the {@linkplain ObjectReference#getValue() value} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
+   * to your query.
+   *
+   * @param values the {@linkplain ObjectReference#getValue() value} values of the searched for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery porOrSorValueIn(String... values);
+
+  /**
    * Add the values of {@linkplain ObjectReference#getValue() value} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} for pattern matching
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for pattern matching
    * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
    * % to specify the pattern. If you specify multiple arguments they are combined with the OR
    * keyword.
@@ -1675,7 +1816,7 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
    *     {@linkplain Task Tasks}
    * @return the {@linkplain TaskQuery}
    */
-  TaskQuery sorValueLike(String... values);
+  TaskQuery porOrSorValueLike(String... values);
 
   // endregion
   // region customAttributes
