@@ -1714,6 +1714,20 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   TaskQuery sorValueIn(String... values);
 
   /**
+   * Add the values of {@linkplain ObjectReference#getValue() value} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} for pattern matching
+   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
+   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
+   * keyword.
+   *
+   * @param values the {@linkplain ObjectReference#getValue() value} values of the searched-for
+   *     {@linkplain Task Tasks}
+   * @return the {@linkplain TaskQuery}
+   */
+  TaskQuery sorValueLike(String... values);
+
+
+  /**
    * Add the values of the {@linkplain ObjectReference#getCompany()  company} of at least one of the
    * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
    * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
