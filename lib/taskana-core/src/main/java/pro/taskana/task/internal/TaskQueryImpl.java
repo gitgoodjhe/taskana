@@ -1448,15 +1448,55 @@ public class TaskQueryImpl implements TaskQuery {
   }
 
   @Override
+  public TaskQuery porOrSorCompanyIn(String... companies) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorCompanyLike(String... companies) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemIn(String... systems) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemLike(String... systems) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemInstanceIn(String... systemInstances) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorSystemInstanceLike(String... systemInstances) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorTypeIn(String... types) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorTypeLike(String... types) {
+    return null;
+  }
+
+  @Override
+  public TaskQuery porOrSorValueIn(String... values) {
+    return null;
+  }
+
+  @Override
   public TaskQuery porOrSorValueLike(String... values) {
     joinWithSecondaryObjectReferences = true;
     porOrSorValueLike = toLowerCopy(values);
     return this;
-  }
-
-  @Override
-  public TaskQuery porOrSorValueNotLike(String... values) {
-    return null;
   }
 
   @Override
@@ -2346,7 +2386,7 @@ public class TaskQueryImpl implements TaskQuery {
       sortDirection = SortDirection.ASCENDING;
     }
     orderByInner.add(columnName + " " + sortDirection);
-    if (columnName.startsWith("a") || columnName.startsWith("w") || columnName.startsWith("c")) {
+    if (columnName.startsWith("a") || columnName.startsWith("w") || columnName.startsWith("c") || columnName.startsWith("cp")) {
       orderByOuter.add(columnName.replace(".", "").toUpperCase() + " " + sortDirection);
     } else {
       orderByOuter.add(columnName + " " + sortDirection);
