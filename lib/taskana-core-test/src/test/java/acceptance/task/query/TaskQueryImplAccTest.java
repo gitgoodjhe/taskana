@@ -38,7 +38,6 @@ import pro.taskana.task.api.WildcardSearchField;
 import pro.taskana.task.api.models.Attachment;
 import pro.taskana.task.api.models.ObjectReference;
 import pro.taskana.task.api.models.TaskSummary;
-import pro.taskana.task.internal.models.ObjectReferenceImpl;
 import pro.taskana.testapi.TaskanaInject;
 import pro.taskana.testapi.TaskanaIntegrationTest;
 import pro.taskana.testapi.builder.ObjectReferenceBuilder;
@@ -1332,41 +1331,44 @@ class TaskQueryImplAccTest {
             taskInWorkbasket(wb).classificationSummary(class3).buildAndStoreAsSummary(taskService);
       }
 
-    @WithAccessId(user = "admin")
-    @Test
-    void should_ApplyFilter_When_QueryingForNameParentNotLike1() throws Exception {
+      @WithAccessId(user = "admin")
+      @Test
+      void should_ApplyFilter_When_QueryingForNameParentNotLike1() throws Exception {
 
-        ObjectReference obj1 = ObjectReferenceBuilder.newObjectReference().value("abc").type("cde").system("def").systemInstance("ghi").company("jkl").build();
-      ObjectReference obj2 = ObjectReferenceBuilder.newObjectReference().value("abc").type("cde").system("def").systemInstance("ghi").company("jkl").build();
+        ObjectReference obj1 =
+            ObjectReferenceBuilder.newObjectReference()
+                .value("abc")
+                .type("cde")
+                .system("def")
+                .systemInstance("ghi")
+                .company("jkl")
+                .build();
+        ObjectReference obj2 =
+            ObjectReferenceBuilder.newObjectReference()
+                .value("abc")
+                .type("cde")
+                .system("def")
+                .systemInstance("ghi")
+                .company("jkl")
+                .build();
 
+        taskSummary1 =
+            taskInWorkbasket(wb).objectReferences(obj1).buildAndStoreAsSummary(taskService);
 
-      taskSummary1 =
-          taskInWorkbasket(wb).objectReferences(obj1).buildAndStoreAsSummary(taskService);
+        taskSummary2 = taskInWorkbasket(wb).primaryObjRef(obj2).buildAndStoreAsSummary(taskService);
 
-      taskSummary2 =
-          taskInWorkbasket(wb).primaryObjRef(obj2).buildAndStoreAsSummary(taskService);
+        List<TaskSummary> list1 = taskService.createTaskQuery().sorValueIn("abc").list();
 
-      List<TaskSummary> list1 =
-          taskService
-              .createTaskQuery()
-              .sorValueIn("abc")
-              .list();
+        List<TaskSummary> list =
+            taskService.createTaskQuery().porOrSorValueLike("%abc%", "%ue%").list();
 
-      List<TaskSummary> list =
-          taskService
-              .createTaskQuery()
-              .porOrSorValueLike("%abc%","%ue%")
-              .list();
+        TaskBuilder.newTask().objectReferences();
 
-      TaskBuilder.newTask().objectReferences();
+        list.forEach(taskSummary -> System.out.println(taskSummary.getPrimaryObjRef().getValue()));
 
-      list.forEach(taskSummary -> System.out.println(taskSummary.getPrimaryObjRef().getValue()));
-
-     System.out.println(list.size());
+        System.out.println(list.size());
+      }
     }
-    }
-
-
 
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)

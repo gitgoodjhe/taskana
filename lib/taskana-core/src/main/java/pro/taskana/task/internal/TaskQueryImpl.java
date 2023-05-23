@@ -2386,7 +2386,10 @@ public class TaskQueryImpl implements TaskQuery {
       sortDirection = SortDirection.ASCENDING;
     }
     orderByInner.add(columnName + " " + sortDirection);
-    if (columnName.startsWith("a") || columnName.startsWith("w") || columnName.startsWith("c") || columnName.startsWith("cp")) {
+    if (columnName.startsWith("a")
+        || columnName.startsWith("w")
+        || columnName.startsWith("c")
+        || columnName.startsWith("cp")) {
       orderByOuter.add(columnName.replace(".", "").toUpperCase() + " " + sortDirection);
     } else {
       orderByOuter.add(columnName + " " + sortDirection);
