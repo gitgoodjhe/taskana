@@ -1737,10 +1737,11 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   TaskQuery sorValueIn(String... values);
 
   /**
-   * Add the values of {@linkplain ObjectReference#getValue value} of at least one of the {@linkplain
-   * Task#getSecondaryObjectReferences() secondaryobjectReferences} for pattern matching to your
-   * query. They will be compared in SQL with the LIKE operator. You may use a wildcard like % to
-   * specify the pattern. If you specify multiple arguments they are combined with the OR keyword.
+   * Add the values of {@linkplain ObjectReference#getValue value} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} for pattern matching
+   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
+   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
+   * keyword.
    *
    * @param values the {@linkplain ObjectReference#getValue value} values of the searched-for
    *     {@linkplain Task Tasks}
@@ -1749,25 +1750,22 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   TaskQuery sorValueLike(String... values);
 
   /**
-   * Add the values of the {@linkplain ObjectReference#getCompany()  company} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
-   * to your query.
+   * Add the values of the {@linkplain ObjectReference#getCompany() company} of at least one of the
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference} for exact matching to your query.
    *
    * @param companies the {@linkplain ObjectReference#getCompany() value} values of the searched-for
    *     {@linkplain Task Tasks}
    * @return the {@linkplain TaskQuery}
    */
-
   TaskQuery porOrSorCompanyIn(String... companies);
 
   /**
    * Add the values of {@linkplain ObjectReference#getCompany() company} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for pattern matching
-   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
-   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
-   * keyword.
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference} for pattern matching to your query. They will
+   * be compared in SQL with the LIKE operator. You may use a wildcard like % to specify the
+   * pattern. If you specify multiple arguments they are combined with the OR keyword.
    *
    * @param companies the {@linkplain ObjectReference#getCompany() company} values of the
    *     searched-for {@linkplain Task Tasks}
@@ -1780,9 +1778,8 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
 
   /**
    * Add the values of the {@linkplain ObjectReference#getSystem() system} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
-   * to your query.
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference} for exact matching to your query.
    *
    * @param systems the {@linkplain ObjectReference#getSystem() system} values of the searched for
    *     {@linkplain Task Tasks}
@@ -1792,11 +1789,10 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
 
   /**
    * Add the values of {@linkplain ObjectReference#getSystem system} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference}for pattern matching
-   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
-   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
-   * keyword.
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference}for pattern matching to your query. They will be
+   * compared in SQL with the LIKE operator. You may use a wildcard like % to specify the pattern.
+   * If you specify multiple arguments they are combined with the OR keyword.
    *
    * @param systems the {@linkplain ObjectReference#getSystem system} values of the searched-for
    *     {@linkplain Task Tasks}
@@ -1810,8 +1806,7 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   /**
    * Add the values of the {@linkplain ObjectReference#getSystemInstance() systemInstance} of at
    * least one of the {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for
-   * exact matching to your query.
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching to your query.
    *
    * @param systemInstances the {@linkplain ObjectReference#getSystemInstance() systemInstance}
    *     values of the searched for {@linkplain Task Tasks}
@@ -1822,10 +1817,9 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
   /**
    * Add the values of {@linkplain ObjectReference#getSystemInstance() systemInstance} of at least
    * one of the {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for
-   * pattern matching to your query. They will be compared in SQL with the LIKE operator. You may
-   * use a wildcard like % to specify the pattern. If you specify multiple arguments they are
-   * combined with the OR keyword.
+   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for pattern matching to your query.
+   * They will be compared in SQL with the LIKE operator. You may use a wildcard like % to specify
+   * the pattern. If you specify multiple arguments they are combined with the OR keyword.
    *
    * @param systemInstances the {@linkplain ObjectReference#getSystemInstance() systemInstance}
    *     values of the searched-for {@linkplain Task Tasks}
@@ -1838,9 +1832,8 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
 
   /**
    * Add the values of the {@linkplain ObjectReference#getType() type} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
-   * to your query.
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference} for exact matching to your query.
    *
    * @param types the {@linkplain ObjectReference#getType() type} values of the searched for
    *     {@linkplain Task Tasks}
@@ -1850,10 +1843,10 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
 
   /**
    * Add the values of {@linkplain ObjectReference#getType type} of at least one of the {@linkplain
-   * Task#getSecondaryObjectReferences() secondaryobjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference}for pattern matching to your
-   * query. They will be compared in SQL with the LIKE operator. You may use a wildcard like % to
-   * specify the pattern. If you specify multiple arguments they are combined with the OR keyword.
+   * Task#getSecondaryObjectReferences() secondaryobjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference}for pattern matching to your query. They will be
+   * compared in SQL with the LIKE operator. You may use a wildcard like % to specify the pattern.
+   * If you specify multiple arguments they are combined with the OR keyword.
    *
    * @param types the {@linkplain ObjectReference#getType type} values of the searched-for
    *     {@linkplain Task Tasks}
@@ -1866,9 +1859,8 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
 
   /**
    * Add the values of the {@linkplain ObjectReference#getValue() value} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for exact matching
-   * to your query.
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryObjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference} for exact matching to your query.
    *
    * @param values the {@linkplain ObjectReference#getValue() value} values of the searched for
    *     {@linkplain Task Tasks}
@@ -1878,11 +1870,10 @@ public interface TaskQuery extends BaseQuery<TaskSummary, TaskQueryColumnName> {
 
   /**
    * Add the values of {@linkplain ObjectReference#getValue() value} of at least one of the
-   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or
-   * {@linkplain Task#getPrimaryObjRef() primaryObjectReference} for pattern matching
-   * to your query. They will be compared in SQL with the LIKE operator. You may use a wildcard like
-   * % to specify the pattern. If you specify multiple arguments they are combined with the OR
-   * keyword.
+   * {@linkplain Task#getSecondaryObjectReferences() secondaryobjectReferences} or {@linkplain
+   * Task#getPrimaryObjRef() primaryObjectReference} for pattern matching to your query. They will
+   * be compared in SQL with the LIKE operator. You may use a wildcard like % to specify the
+   * pattern. If you specify multiple arguments they are combined with the OR keyword.
    *
    * @param values the {@linkplain ObjectReference#getValue() value} values of the searched-for
    *     {@linkplain Task Tasks}

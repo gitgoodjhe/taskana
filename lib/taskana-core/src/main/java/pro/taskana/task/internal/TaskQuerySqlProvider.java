@@ -34,7 +34,8 @@ public class TaskQuerySqlProvider {
         + "a.REF_VALUE as AREF_VALUE, a.RECEIVED as ARECEIVED"
         + "</if>"
         + "<if test=\"addClassificationNameToSelectClauseForOrdering\">, c.NAME as CNAME </if>"
-        + "<if test=\"addClassificationParentNameToSelectClauseForOrdering\">, cp.NAME as CPNAME </if>"
+        + "<if test=\"addClassificationParentNameToSelectClauseForOrdering\">, cp.NAME"
+        + " as CPNAME </if>"
         + "<if test=\"addAttachmentClassificationNameToSelectClauseForOrdering\">, "
         + "ac.NAME as ACNAME </if>"
         + "<if test=\"addWorkbasketNameToSelectClauseForOrdering\">, w.NAME as WNAME </if>"
@@ -335,7 +336,6 @@ public class TaskQuerySqlProvider {
         + checkForAuthorization()
         + commonTaskWhereStatement()
         + CLOSING_WHERE_TAG
-
         + closeOuterClauseForGroupByPor()
         + closeOuterClauseForGroupBySor()
         + "<if test=\"groupByPor or groupBySor != null\"> "
@@ -465,9 +465,7 @@ public class TaskQuerySqlProvider {
   }
 
   private static String openOuterClauseForGroupByPorOrSor() {
-    return "<if test=\"groupByPor or groupBySor != null\"> "
-        + "SELECT * FROM ("
-        + "</if> ";
+    return "<if test=\"groupByPor or groupBySor != null\"> " + "SELECT * FROM (" + "</if> ";
   }
 
   private static String closeOuterClauseForGroupByPor() {
@@ -697,10 +695,10 @@ public class TaskQuerySqlProvider {
     sb.append("<if test='withoutAttachment'> AND a.ID IS NULL</if> ");
     sb.append(
         "<if test='porOrSorTypeIn != null'>AND ( "
-            +"t.POR_TYPE IN "
+            + "t.POR_TYPE IN "
             + "(<foreach item='item'"
             + " collection='porOrSorTypeIn' separator=','>#{item}</foreach>)"
-            +" OR o.TYPE IN "
+            + " OR o.TYPE IN "
             + "(<foreach item='item'"
             + " collection='porOrSorTypeIn' separator=','>#{item}</foreach>)"
             + ")</if>");

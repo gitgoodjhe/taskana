@@ -38,7 +38,6 @@ import pro.taskana.task.api.WildcardSearchField;
 import pro.taskana.task.api.models.Attachment;
 import pro.taskana.task.api.models.ObjectReference;
 import pro.taskana.task.api.models.TaskSummary;
-import pro.taskana.task.internal.models.ObjectReferenceImpl;
 import pro.taskana.testapi.TaskanaInject;
 import pro.taskana.testapi.TaskanaIntegrationTest;
 import pro.taskana.testapi.builder.ObjectReferenceBuilder;
@@ -698,9 +697,7 @@ class TaskQueryImplAccTest {
             taskInWorkbasket(wb)
                 .completed(Instant.parse("2020-02-01T00:00:00Z"))
                 .buildAndStoreAsSummary(taskService);
-        taskInWorkbasket(wb)
-                .completed(null)
-                .buildAndStoreAsSummary(taskService);
+        taskInWorkbasket(wb).completed(null).buildAndStoreAsSummary(taskService);
       }
 
       @WithAccessId(user = "user-1-1")
@@ -1501,27 +1498,16 @@ class TaskQueryImplAccTest {
         taskSummary1 =
             taskInWorkbasket(wb).objectReferences(obj1).buildAndStoreAsSummary(taskService);
 
-        taskSummary2 =
-            taskInWorkbasket(wb).primaryObjRef(obj2).buildAndStoreAsSummary(taskService);
+        taskSummary2 = taskInWorkbasket(wb).primaryObjRef(obj2).buildAndStoreAsSummary(taskService);
 
-        List<TaskSummary> list1 =
-            taskService
-                .createTaskQuery()
-                .sorValueIn("cde")
-                .list();
+        List<TaskSummary> list1 = taskService.createTaskQuery().sorValueIn("cde").list();
 
-        List<TaskSummary> list =
-            taskService
-                .createTaskQuery()
-                .porOrSorTypeIn("cde")
-                .list();
+        List<TaskSummary> list = taskService.createTaskQuery().porOrSorTypeIn("cde").list();
 
         list.forEach(taskSummary -> System.out.println(taskSummary));
 
         System.out.println(list.size());
-
       }
-
     }
 
     @Nested

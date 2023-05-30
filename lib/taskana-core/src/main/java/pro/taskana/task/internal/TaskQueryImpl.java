@@ -1511,12 +1511,14 @@ public class TaskQueryImpl implements TaskQuery {
     porOrSorTypeLike = toLowerCopy(types);
     return this;
   }
+
   @Override
   public TaskQuery porOrSorValueIn(String... values) {
     joinWithSecondaryObjectReferences = true;
     porOrSorValueIn = toLowerCopy(values);
     return this;
   }
+
   public TaskQuery porOrSorValueLike(String... values) {
     joinWithSecondaryObjectReferences = true;
     porOrSorValueLike = toLowerCopy(values);
