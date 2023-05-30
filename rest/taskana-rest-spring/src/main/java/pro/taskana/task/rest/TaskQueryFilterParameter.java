@@ -1010,6 +1010,17 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
   @JsonProperty("sor-value-like")
   private final String[] sorValueLike;
 
+  // region porOrSor
+  /** Filter by the type of the secondary object reference of the Task. This is an exact match. */
+  @JsonProperty("por-or-sor-type")
+  private final String[] porOrSorTypeIn;
+
+  // region porOrSor
+  /** Filter by the type of the secondary object reference of the Task. This is an exact match. */
+  @JsonProperty("por-or-sor-value-like")
+  private final String[] porOrSorValueLike;
+
+
   // endregion
   // region read
   /** Filter by the is read flag of the Task. This is an exact match. */
@@ -1327,6 +1338,8 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
     "sor-type-like",
     "sor-value",
     "sor-value-like",
+      "por-or-sor-type",
+      "por-or-sor-value-like",
     "is-read",
     "is-transferred",
     "attachment-classification-id",
@@ -1487,6 +1500,8 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
       String[] sorTypeLike,
       String[] sorValueIn,
       String[] sorValueLike,
+      String[] porOrSorTypeIn,
+      String[] porOrSorValueLike,
       Boolean isRead,
       Boolean isTransferred,
       String[] attachmentClassificationIdIn,
@@ -1646,6 +1661,8 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
     this.sorTypeLike = sorTypeLike;
     this.sorValueIn = sorValueIn;
     this.sorValueLike = sorValueLike;
+    this.porOrSorTypeIn = porOrSorTypeIn;
+    this.porOrSorValueLike = porOrSorValueLike;
     this.isRead = isRead;
     this.isTransferred = isTransferred;
     this.attachmentClassificationIdIn = attachmentClassificationIdIn;
@@ -1980,7 +1997,10 @@ public class TaskQueryFilterParameter implements QueryParameter<TaskQuery, Void>
     Optional.ofNullable(sorValueLike)
         .map(this::wrapElementsInLikeStatement)
         .ifPresent(query::sorValueLike);
-
+    Optional.ofNullable(porOrSorTypeIn).ifPresent(query::porOrSorTypeIn);
+    Optional.ofNullable(porOrSorValueLike)
+        .map(this::wrapElementsInLikeStatement)
+        .ifPresent(query::porOrSorValueLike);
     Optional.ofNullable(isRead).ifPresent(query::readEquals);
 
     Optional.ofNullable(isTransferred).ifPresent(query::transferredEquals);
