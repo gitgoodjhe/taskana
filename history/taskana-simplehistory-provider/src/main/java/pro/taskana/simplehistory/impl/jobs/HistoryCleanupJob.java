@@ -33,9 +33,7 @@ public class HistoryCleanupJob extends AbstractTaskanaJob {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HistoryCleanupJob.class);
 
-  private final TaskanaHistoryEngineImpl taskanaHistoryEngine =
-      TaskanaHistoryEngineImpl.createTaskanaEngine(taskanaEngineImpl);
-
+  private SimpleHistoryServiceImpl simpleHistoryService =null;
   private final boolean allCompletedSameParentBusiness =
       taskanaEngineImpl
           .getConfiguration()
@@ -51,6 +49,10 @@ public class HistoryCleanupJob extends AbstractTaskanaJob {
       TaskanaTransactionProvider txProvider,
       ScheduledJob scheduledJob) {
     super(taskanaEngine, txProvider, scheduledJob, true);
+    if(simpleHistoryService == null){
+      simpleHistoryService = new SimpleHistoryServiceImpl();
+      simpleHistoryService.initialize(taskanaEngine);
+    }
   }
 
   public static Duration getLockExpirationPeriod(TaskanaConfiguration taskanaConfiguration) {
@@ -62,9 +64,6 @@ public class HistoryCleanupJob extends AbstractTaskanaJob {
     Instant createdBefore = Instant.now().minus(minimumAge);
     LOGGER.info("Running job to delete all history events created before ({})", createdBefore);
     try {
-      SimpleHistoryServiceImpl simpleHistoryService =
-          (SimpleHistoryServiceImpl) taskanaHistoryEngine.getTaskanaHistoryService();
-
       List<TaskHistoryEvent> historyEventCandidatesToClean =
           simpleHistoryService
               .createTaskHistoryQuery()
@@ -180,9 +179,6 @@ public class HistoryCleanupJob extends AbstractTaskanaJob {
 
   private int deleteEvents(List<String> taskIdsToDeleteHistoryEventsFor)
       throws InvalidArgumentException, NotAuthorizedException {
-    SimpleHistoryServiceImpl simpleHistoryService =
-        (SimpleHistoryServiceImpl) taskanaHistoryEngine.getTaskanaHistoryService();
-
     int deletedTasksCount =
         (int)
             simpleHistoryService
