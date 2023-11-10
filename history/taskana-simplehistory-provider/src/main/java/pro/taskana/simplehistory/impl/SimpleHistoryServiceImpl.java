@@ -34,7 +34,6 @@ import pro.taskana.user.internal.UserMapper;
 public class SimpleHistoryServiceImpl implements TaskanaHistory {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHistoryServiceImpl.class);
-  // private TaskanaHistoryEngineImpl taskanaHistoryEngine;
   private TaskHistoryEventMapper taskHistoryEventMapper;
   private WorkbasketHistoryEventMapper workbasketHistoryEventMapper;
   private ClassificationHistoryEventMapper classificationHistoryEventMapper;
@@ -43,8 +42,6 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
   private InternalTaskanaEngine internalTaskanaEngine;
 
   public void initialize(TaskanaEngine taskanaEngine) {
-
-    // this.taskanaHistoryEngine = getTaskanaEngine(taskanaEngine);
 
     LOGGER.info(
         "Simple history service implementation initialized with schemaName: {} ",
@@ -203,11 +200,4 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
   public ClassificationHistoryQuery createClassificationHistoryQuery() {
     return new ClassificationHistoryQueryImpl(internalTaskanaEngine);
   }
-
-  /*
-   * ATTENTION: This method exists for testing purposes.
-   */
-  // TaskanaHistoryEngineImpl getTaskanaEngine(TaskanaEngine taskanaEngine) {
-  //  return TaskanaHistoryEngineImpl.createTaskanaEngine(taskanaEngine);
-  // }
 }

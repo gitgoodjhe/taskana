@@ -12,7 +12,6 @@ import pro.taskana.common.api.TaskanaEngine;
 import pro.taskana.common.test.security.JaasExtension;
 import pro.taskana.common.test.security.WithAccessId;
 import pro.taskana.simplehistory.impl.SimpleHistoryServiceImpl;
-import pro.taskana.simplehistory.impl.TaskanaHistoryEngineImpl;
 import pro.taskana.spi.history.api.TaskanaHistory;
 import pro.taskana.spi.history.api.events.task.TaskHistoryEvent;
 import pro.taskana.spi.history.api.events.task.TaskHistoryEventType;
@@ -27,7 +26,6 @@ import pro.taskana.testapi.builder.TaskBuilder;
 import pro.taskana.workbasket.api.WorkbasketService;
 import pro.taskana.workbasket.api.models.WorkbasketSummary;
 
-
 @TaskanaIntegrationTest
 @WithServiceProvider(
     serviceProviderInterface = TaskanaHistory.class,
@@ -40,8 +38,6 @@ class CreateHistoryEventOnTaskDeletionAccTest {
   @TaskanaInject ClassificationService classificationService;
   ClassificationSummary defaultClassificationSummary;
   WorkbasketSummary defaultWorkbasketSummary;
-
-  protected static TaskanaHistoryEngineImpl taskanaHistoryEngine;
   Task task1;
   Task task2;
   Task task3;
@@ -51,7 +47,6 @@ class CreateHistoryEventOnTaskDeletionAccTest {
   @WithAccessId(user = "admin")
   @BeforeAll
   void setUp() throws Exception {
-
 
     defaultClassificationSummary =
         DefaultTestEntities.defaultTestClassification()

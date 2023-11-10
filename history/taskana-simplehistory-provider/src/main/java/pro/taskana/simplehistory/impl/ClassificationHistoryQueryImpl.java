@@ -82,8 +82,8 @@ public class ClassificationHistoryQueryImpl implements ClassificationHistoryQuer
   private String[] custom7Like;
   private String[] custom8Like;
 
-  public ClassificationHistoryQueryImpl(InternalTaskanaEngine internalTaskanaHistoryEngine) {
-    this.internalTaskanaEngine = internalTaskanaHistoryEngine;
+  public ClassificationHistoryQueryImpl(InternalTaskanaEngine internalTaskanaEngine) {
+    this.internalTaskanaEngine = internalTaskanaEngine;
   }
 
   @Override
