@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import pro.taskana.common.api.TimeInterval;
 import pro.taskana.common.api.exceptions.InvalidArgumentException;
 import pro.taskana.common.api.exceptions.SystemException;
+import pro.taskana.common.internal.InternalTaskanaEngine;
 import pro.taskana.simplehistory.impl.workbasket.WorkbasketHistoryQuery;
 import pro.taskana.simplehistory.impl.workbasket.WorkbasketHistoryQueryColumnName;
 import pro.taskana.spi.history.api.events.workbasket.WorkbasketHistoryEvent;
@@ -30,7 +31,7 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
   private static final String SQL_EXCEPTION_MESSAGE =
       "Method openConnection() could not open a connection to the database.";
 
-  private final TaskanaHistoryEngineImpl taskanaHistoryEngine;
+  private final InternalTaskanaEngine internalTaskanaEngine;
   private final List<String> orderColumns;
 
   @SuppressWarnings("unused")
@@ -71,8 +72,8 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
   private String[] orgLevel3Like;
   private String[] orgLevel4Like;
 
-  public WorkbasketHistoryQueryImpl(TaskanaHistoryEngineImpl internalTaskanaHistoryEngine) {
-    this.taskanaHistoryEngine = internalTaskanaHistoryEngine;
+  public WorkbasketHistoryQueryImpl(InternalTaskanaEngine internalTaskanaEngine) {
+    this.internalTaskanaEngine = internalTaskanaEngine;
     this.orderBy = new ArrayList<>();
     this.orderColumns = new ArrayList<>();
   }
@@ -475,14 +476,11 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
   public List<WorkbasketHistoryEvent> list() {
     List<WorkbasketHistoryEvent> result = new ArrayList<>();
     try {
-      taskanaHistoryEngine.openConnection();
-      result = taskanaHistoryEngine.getSqlSession().selectList(LINK_TO_MAPPER, this);
+      internalTaskanaEngine.openConnection();
+      result = internalTaskanaEngine.getSqlSession().selectList(LINK_TO_MAPPER, this);
       return result;
-    } catch (SQLException e) {
-      LOGGER.error(SQL_EXCEPTION_MESSAGE, e.getCause());
-      return result;
-    } finally {
-      taskanaHistoryEngine.returnConnection();
+    }finally {
+      internalTaskanaEngine.returnConnection();
     }
   }
 
@@ -490,15 +488,12 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
   public List<WorkbasketHistoryEvent> list(int offset, int limit) {
     List<WorkbasketHistoryEvent> result = new ArrayList<>();
     try {
-      taskanaHistoryEngine.openConnection();
+      internalTaskanaEngine.openConnection();
       RowBounds rowBounds = new RowBounds(offset, limit);
-      result = taskanaHistoryEngine.getSqlSession().selectList(LINK_TO_MAPPER, this, rowBounds);
-      return result;
-    } catch (SQLException e) {
-      LOGGER.error(SQL_EXCEPTION_MESSAGE, e.getCause());
+      result = internalTaskanaEngine.getSqlSession().selectList(LINK_TO_MAPPER, this, rowBounds);
       return result;
     } finally {
-      taskanaHistoryEngine.returnConnection();
+      internalTaskanaEngine.returnConnection();
     }
   }
 
@@ -512,17 +507,14 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
     this.addOrderCriteria(columnName.toString(), sortDirection);
 
     try {
-      taskanaHistoryEngine.openConnection();
-      result = taskanaHistoryEngine.getSqlSession().selectList(LINK_TO_VALUE_MAPPER, this);
+      internalTaskanaEngine.openConnection();
+      result = internalTaskanaEngine.getSqlSession().selectList(LINK_TO_VALUE_MAPPER, this);
       return result;
-    } catch (SQLException e) {
-      LOGGER.error(SQL_EXCEPTION_MESSAGE, e.getCause());
-      return result;
-    } finally {
+    }  finally {
       this.orderBy = cacheOrderBy;
       this.columnName = null;
       this.orderColumns.remove(orderColumns.size() - 1);
-      taskanaHistoryEngine.returnConnection();
+      internalTaskanaEngine.returnConnection();
     }
   }
 
@@ -530,15 +522,12 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
   public WorkbasketHistoryEvent single() {
     WorkbasketHistoryEvent result = null;
     try {
-      taskanaHistoryEngine.openConnection();
-      result = taskanaHistoryEngine.getSqlSession().selectOne(LINK_TO_MAPPER, this);
+      internalTaskanaEngine.openConnection();
+      result = internalTaskanaEngine.getSqlSession().selectOne(LINK_TO_MAPPER, this);
 
       return result;
-    } catch (SQLException e) {
-      LOGGER.error(SQL_EXCEPTION_MESSAGE, e.getCause());
-      return result;
     } finally {
-      taskanaHistoryEngine.returnConnection();
+      internalTaskanaEngine.returnConnection();
     }
   }
 
@@ -546,14 +535,11 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
   public long count() {
     Long rowCount;
     try {
-      taskanaHistoryEngine.openConnection();
-      rowCount = taskanaHistoryEngine.getSqlSession().selectOne(LINK_TO_COUNTER, this);
+      internalTaskanaEngine.openConnection();
+      rowCount = internalTaskanaEngine.getSqlSession().selectOne(LINK_TO_COUNTER, this);
       return (rowCount == null) ? 0L : rowCount;
-    } catch (SQLException e) {
-      LOGGER.error(SQL_EXCEPTION_MESSAGE, e.getCause());
-      return -1;
-    } finally {
-      taskanaHistoryEngine.returnConnection();
+    }  finally {
+      internalTaskanaEngine.returnConnection();
     }
   }
 

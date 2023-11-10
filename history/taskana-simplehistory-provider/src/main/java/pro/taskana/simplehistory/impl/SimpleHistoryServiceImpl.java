@@ -12,13 +12,17 @@ import pro.taskana.common.api.TaskanaRole;
 import pro.taskana.common.api.exceptions.InvalidArgumentException;
 import pro.taskana.common.api.exceptions.NotAuthorizedException;
 import pro.taskana.common.api.exceptions.SystemException;
+import pro.taskana.common.internal.InternalTaskanaEngine;
 import pro.taskana.common.internal.TaskanaEngineImpl;
 import pro.taskana.simplehistory.impl.classification.ClassificationHistoryEventMapper;
 import pro.taskana.simplehistory.impl.classification.ClassificationHistoryQuery;
+import pro.taskana.simplehistory.impl.classification.ClassificationHistoryQueryMapper;
 import pro.taskana.simplehistory.impl.task.TaskHistoryEventMapper;
 import pro.taskana.simplehistory.impl.task.TaskHistoryQuery;
+import pro.taskana.simplehistory.impl.task.TaskHistoryQueryMapper;
 import pro.taskana.simplehistory.impl.workbasket.WorkbasketHistoryEventMapper;
 import pro.taskana.simplehistory.impl.workbasket.WorkbasketHistoryQuery;
+import pro.taskana.simplehistory.impl.workbasket.WorkbasketHistoryQueryMapper;
 import pro.taskana.spi.history.api.TaskanaHistory;
 import pro.taskana.spi.history.api.events.classification.ClassificationHistoryEvent;
 import pro.taskana.spi.history.api.events.task.TaskHistoryEvent;
@@ -31,28 +35,36 @@ import pro.taskana.user.internal.UserMapper;
 public class SimpleHistoryServiceImpl implements TaskanaHistory {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHistoryServiceImpl.class);
-  private TaskanaHistoryEngineImpl taskanaHistoryEngine;
+  //private TaskanaHistoryEngineImpl taskanaHistoryEngine;
   private TaskHistoryEventMapper taskHistoryEventMapper;
   private WorkbasketHistoryEventMapper workbasketHistoryEventMapper;
   private ClassificationHistoryEventMapper classificationHistoryEventMapper;
   private UserMapper userMapper;
 
+  private InternalTaskanaEngine internalTaskanaEngine;
+
   public void initialize(TaskanaEngine taskanaEngine) {
 
-    this.taskanaHistoryEngine = getTaskanaEngine(taskanaEngine);
+   // this.taskanaHistoryEngine = getTaskanaEngine(taskanaEngine);
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug(
+
+      LOGGER.info(
           "Simple history service implementation initialized with schemaName: {} ",
           taskanaEngine.getConfiguration().getSchemaName());
-    }
+
 
     Field sessionManager = null;
     try {
+      Field internalTaskanaEngineImpl = TaskanaEngineImpl.class.getDeclaredField(
+          "internalTaskanaEngineImpl");
+      internalTaskanaEngineImpl.setAccessible(true);
+      this.internalTaskanaEngine = (InternalTaskanaEngine) internalTaskanaEngineImpl.get(taskanaEngine);
       sessionManager = TaskanaEngineImpl.class.getDeclaredField("sessionManager");
       sessionManager.setAccessible(true);
     } catch (NoSuchFieldException e) {
       throw new SystemException("SQL Session could not be retrieved. Aborting Startup");
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
     try {
       SqlSession sqlSession = (SqlSession) sessionManager.get(taskanaEngine);
@@ -75,6 +87,34 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
           .hasMapper(ClassificationHistoryEventMapper.class)) {
 
         sqlSession.getConfiguration().addMapper(ClassificationHistoryEventMapper.class);
+
+      }
+
+      if (!sqlSession
+          .getConfiguration()
+          .getMapperRegistry()
+          .hasMapper(ClassificationHistoryQueryMapper.class)) {
+
+        sqlSession.getConfiguration().addMapper(ClassificationHistoryQueryMapper.class);
+
+      }
+
+      if (!sqlSession
+          .getConfiguration()
+          .getMapperRegistry()
+          .hasMapper(TaskHistoryQueryMapper.class)) {
+
+        sqlSession.getConfiguration().addMapper(TaskHistoryQueryMapper.class);
+
+      }
+
+      if (!sqlSession
+          .getConfiguration()
+          .getMapperRegistry()
+          .hasMapper(WorkbasketHistoryQueryMapper.class)) {
+
+        sqlSession.getConfiguration().addMapper(WorkbasketHistoryQueryMapper.class);
+
       }
 
       this.taskHistoryEventMapper = sqlSession.getMapper(TaskHistoryEventMapper.class);
@@ -121,34 +161,32 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
   @Override
   public void deleteHistoryEventsByTaskIds(List<String> taskIds)
       throws InvalidArgumentException, NotAuthorizedException {
-    taskanaHistoryEngine.checkRoleMembership(TaskanaRole.ADMIN);
+
+    internalTaskanaEngine.openConnection();
+    internalTaskanaEngine.getEngine().checkRoleMembership(TaskanaRole.ADMIN);
+
 
     if (taskIds == null) {
       throw new InvalidArgumentException("List of taskIds must not be null.");
     }
 
-    try {
-      taskanaHistoryEngine.openConnection();
       taskHistoryEventMapper.deleteMultipleByTaskIds(taskIds);
-    } catch (SQLException e) {
-      LOGGER.error("Caught exception while trying to delete history events", e);
-    } finally {
-      taskanaHistoryEngine.returnConnection();
-    }
+
+    internalTaskanaEngine.returnConnection();
   }
 
   public TaskHistoryEvent getTaskHistoryEvent(String historyEventId)
       throws TaskanaHistoryEventNotFoundException {
     TaskHistoryEvent resultEvent = null;
     try {
-      taskanaHistoryEngine.openConnection();
+      internalTaskanaEngine.openConnection();
       resultEvent = taskHistoryEventMapper.findById(historyEventId);
 
       if (resultEvent == null) {
         throw new TaskanaHistoryEventNotFoundException(historyEventId);
       }
 
-      if (taskanaHistoryEngine.getConfiguration().isAddAdditionalUserInfo()) {
+      if (internalTaskanaEngine.getEngine().getConfiguration().isAddAdditionalUserInfo()) {
         User user = userMapper.findById(resultEvent.getUserId());
         if (user != null) {
           resultEvent.setUserLongName(user.getLongName());
@@ -156,24 +194,21 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
       }
       return resultEvent;
 
-    } catch (SQLException e) {
-      LOGGER.error("Caught exception while trying to retrieve a history event", e);
-      return resultEvent;
-    } finally {
-      taskanaHistoryEngine.returnConnection();
+    }  finally {
+      internalTaskanaEngine.returnConnection();
     }
   }
 
   public TaskHistoryQuery createTaskHistoryQuery() {
-    return new TaskHistoryQueryImpl(taskanaHistoryEngine);
+    return new TaskHistoryQueryImpl(internalTaskanaEngine);
   }
 
   public WorkbasketHistoryQuery createWorkbasketHistoryQuery() {
-    return new WorkbasketHistoryQueryImpl(taskanaHistoryEngine);
+    return new WorkbasketHistoryQueryImpl(internalTaskanaEngine);
   }
 
   public ClassificationHistoryQuery createClassificationHistoryQuery() {
-    return new ClassificationHistoryQueryImpl(taskanaHistoryEngine);
+    return new ClassificationHistoryQueryImpl(internalTaskanaEngine);
   }
 
   /*
