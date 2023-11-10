@@ -2,7 +2,6 @@ package pro.taskana.simplehistory.impl;
 
 import static pro.taskana.common.api.BaseQuery.toLowerCopy;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.session.RowBounds;
@@ -479,7 +478,7 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
       internalTaskanaEngine.openConnection();
       result = internalTaskanaEngine.getSqlSession().selectList(LINK_TO_MAPPER, this);
       return result;
-    }finally {
+    } finally {
       internalTaskanaEngine.returnConnection();
     }
   }
@@ -510,7 +509,7 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
       internalTaskanaEngine.openConnection();
       result = internalTaskanaEngine.getSqlSession().selectList(LINK_TO_VALUE_MAPPER, this);
       return result;
-    }  finally {
+    } finally {
       this.orderBy = cacheOrderBy;
       this.columnName = null;
       this.orderColumns.remove(orderColumns.size() - 1);
@@ -538,7 +537,7 @@ public class WorkbasketHistoryQueryImpl implements WorkbasketHistoryQuery {
       internalTaskanaEngine.openConnection();
       rowCount = internalTaskanaEngine.getSqlSession().selectOne(LINK_TO_COUNTER, this);
       return (rowCount == null) ? 0L : rowCount;
-    }  finally {
+    } finally {
       internalTaskanaEngine.returnConnection();
     }
   }

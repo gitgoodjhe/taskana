@@ -2,7 +2,6 @@ package pro.taskana.simplehistory.impl;
 
 import static pro.taskana.common.api.BaseQuery.toLowerCopy;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.session.RowBounds;
@@ -88,7 +87,8 @@ public class TaskHistoryQueryImpl implements TaskHistoryQuery {
     this.internalTaskanaEngine = internalTaskanaEngine;
     this.orderBy = new ArrayList<>();
     this.orderColumns = new ArrayList<>();
-    this.joinWithUserInfo = internalTaskanaEngine.getEngine().getConfiguration().isAddAdditionalUserInfo();
+    this.joinWithUserInfo =
+        internalTaskanaEngine.getEngine().getConfiguration().isAddAdditionalUserInfo();
   }
 
   public String[] getIdIn() {
@@ -670,7 +670,7 @@ public class TaskHistoryQueryImpl implements TaskHistoryQuery {
       internalTaskanaEngine.openConnection();
       result = internalTaskanaEngine.getSqlSession().selectList(LINK_TO_VALUE_MAPPER, this);
       return result;
-    }  finally {
+    } finally {
       this.orderColumns.remove(orderColumns.size() - 1);
       internalTaskanaEngine.returnConnection();
     }

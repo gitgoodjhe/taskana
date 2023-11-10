@@ -1,7 +1,6 @@
 package pro.taskana.simplehistory.impl;
 
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
@@ -35,7 +34,7 @@ import pro.taskana.user.internal.UserMapper;
 public class SimpleHistoryServiceImpl implements TaskanaHistory {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHistoryServiceImpl.class);
-  //private TaskanaHistoryEngineImpl taskanaHistoryEngine;
+  // private TaskanaHistoryEngineImpl taskanaHistoryEngine;
   private TaskHistoryEventMapper taskHistoryEventMapper;
   private WorkbasketHistoryEventMapper workbasketHistoryEventMapper;
   private ClassificationHistoryEventMapper classificationHistoryEventMapper;
@@ -45,20 +44,19 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
 
   public void initialize(TaskanaEngine taskanaEngine) {
 
-   // this.taskanaHistoryEngine = getTaskanaEngine(taskanaEngine);
+    // this.taskanaHistoryEngine = getTaskanaEngine(taskanaEngine);
 
-
-      LOGGER.info(
-          "Simple history service implementation initialized with schemaName: {} ",
-          taskanaEngine.getConfiguration().getSchemaName());
-
+    LOGGER.info(
+        "Simple history service implementation initialized with schemaName: {} ",
+        taskanaEngine.getConfiguration().getSchemaName());
 
     Field sessionManager = null;
     try {
-      Field internalTaskanaEngineImpl = TaskanaEngineImpl.class.getDeclaredField(
-          "internalTaskanaEngineImpl");
+      Field internalTaskanaEngineImpl =
+          TaskanaEngineImpl.class.getDeclaredField("internalTaskanaEngineImpl");
       internalTaskanaEngineImpl.setAccessible(true);
-      this.internalTaskanaEngine = (InternalTaskanaEngine) internalTaskanaEngineImpl.get(taskanaEngine);
+      this.internalTaskanaEngine =
+          (InternalTaskanaEngine) internalTaskanaEngineImpl.get(taskanaEngine);
       sessionManager = TaskanaEngineImpl.class.getDeclaredField("sessionManager");
       sessionManager.setAccessible(true);
     } catch (NoSuchFieldException e) {
@@ -87,7 +85,6 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
           .hasMapper(ClassificationHistoryEventMapper.class)) {
 
         sqlSession.getConfiguration().addMapper(ClassificationHistoryEventMapper.class);
-
       }
 
       if (!sqlSession
@@ -96,7 +93,6 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
           .hasMapper(ClassificationHistoryQueryMapper.class)) {
 
         sqlSession.getConfiguration().addMapper(ClassificationHistoryQueryMapper.class);
-
       }
 
       if (!sqlSession
@@ -105,7 +101,6 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
           .hasMapper(TaskHistoryQueryMapper.class)) {
 
         sqlSession.getConfiguration().addMapper(TaskHistoryQueryMapper.class);
-
       }
 
       if (!sqlSession
@@ -114,7 +109,6 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
           .hasMapper(WorkbasketHistoryQueryMapper.class)) {
 
         sqlSession.getConfiguration().addMapper(WorkbasketHistoryQueryMapper.class);
-
       }
 
       this.taskHistoryEventMapper = sqlSession.getMapper(TaskHistoryEventMapper.class);
@@ -165,12 +159,11 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
     internalTaskanaEngine.openConnection();
     internalTaskanaEngine.getEngine().checkRoleMembership(TaskanaRole.ADMIN);
 
-
     if (taskIds == null) {
       throw new InvalidArgumentException("List of taskIds must not be null.");
     }
 
-      taskHistoryEventMapper.deleteMultipleByTaskIds(taskIds);
+    taskHistoryEventMapper.deleteMultipleByTaskIds(taskIds);
 
     internalTaskanaEngine.returnConnection();
   }
@@ -194,7 +187,7 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
       }
       return resultEvent;
 
-    }  finally {
+    } finally {
       internalTaskanaEngine.returnConnection();
     }
   }
