@@ -25,31 +25,28 @@ import pro.taskana.common.internal.jobs.AbstractTaskanaJob;
 import pro.taskana.common.internal.transaction.TaskanaTransactionProvider;
 import pro.taskana.common.internal.util.CollectionUtil;
 import pro.taskana.simplehistory.impl.SimpleHistoryServiceImpl;
-import pro.taskana.simplehistory.impl.TaskanaHistoryEngineImpl;
 import pro.taskana.spi.history.api.events.task.TaskHistoryEvent;
 import pro.taskana.spi.history.api.events.task.TaskHistoryEventType;
 
 public class HistoryCleanupJob extends AbstractTaskanaJob {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HistoryCleanupJob.class);
-
-  private SimpleHistoryServiceImpl simpleHistoryService =null;
   private final boolean allCompletedSameParentBusiness =
       taskanaEngineImpl
           .getConfiguration()
           .isSimpleHistoryCleanupJobAllCompletedSameParentBusiness();
-
   private final Duration minimumAge =
       taskanaEngineImpl.getConfiguration().getSimpleHistoryCleanupJobMinimumAge();
   private final int batchSize =
       taskanaEngineImpl.getConfiguration().getSimpleHistoryCleanupJobBatchSize();
+  private SimpleHistoryServiceImpl simpleHistoryService = null;
 
   public HistoryCleanupJob(
       TaskanaEngine taskanaEngine,
       TaskanaTransactionProvider txProvider,
       ScheduledJob scheduledJob) {
     super(taskanaEngine, txProvider, scheduledJob, true);
-    if(simpleHistoryService == null){
+    if (simpleHistoryService == null) {
       simpleHistoryService = new SimpleHistoryServiceImpl();
       simpleHistoryService.initialize(taskanaEngine);
     }

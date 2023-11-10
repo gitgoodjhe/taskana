@@ -106,7 +106,7 @@ class SimpleHistoryServiceImplTest {
         AbstractAccTest.createWorkbasketHistoryEvent(
             "wbKey1", WorkbasketHistoryEventType.CREATED.getName(), "someUserId", "someDetails"));
     when(sqlSessionMock.selectList(any(), any())).thenReturn(new ArrayList<>(returnList));
-when(internalTaskanaEngine.getSqlSession()).thenReturn(sqlSessionMock);
+    when(internalTaskanaEngine.getSqlSession()).thenReturn(sqlSessionMock);
     final List<WorkbasketHistoryEvent> result =
         cutSpy.createWorkbasketHistoryQuery().keyIn("wbKey1").list();
 

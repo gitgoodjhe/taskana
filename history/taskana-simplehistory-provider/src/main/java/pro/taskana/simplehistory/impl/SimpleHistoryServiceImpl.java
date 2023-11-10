@@ -207,7 +207,7 @@ public class SimpleHistoryServiceImpl implements TaskanaHistory {
   /*
    * ATTENTION: This method exists for testing purposes.
    */
- // TaskanaHistoryEngineImpl getTaskanaEngine(TaskanaEngine taskanaEngine) {
+  // TaskanaHistoryEngineImpl getTaskanaEngine(TaskanaEngine taskanaEngine) {
   //  return TaskanaHistoryEngineImpl.createTaskanaEngine(taskanaEngine);
-  //}
+  // }
 }
