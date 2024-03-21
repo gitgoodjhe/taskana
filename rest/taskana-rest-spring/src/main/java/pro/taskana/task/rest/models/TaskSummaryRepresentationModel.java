@@ -106,6 +106,8 @@ public class TaskSummaryRepresentationModel
               + " priority are disabled. If the value of manualPriority is negative, Tasks are not "
               + "prioritized manually.")
   protected TaskState state;
+  /** The current count of the comments. */
+  protected int numberOfComments;
   /** The classification of this task. */
   @Schema(name = "classificationSummary", description = "The classification of this task.")
   @NotNull
@@ -348,6 +350,14 @@ public class TaskSummaryRepresentationModel
 
   public void setState(TaskState state) {
     this.state = state;
+  }
+
+  public int getNumberOfComments() {
+    return numberOfComments;
+  }
+
+  public void setNumberOfComments(int numberOfComments) {
+    this.numberOfComments = numberOfComments;
   }
 
   public ClassificationSummaryRepresentationModel getClassificationSummary() {
