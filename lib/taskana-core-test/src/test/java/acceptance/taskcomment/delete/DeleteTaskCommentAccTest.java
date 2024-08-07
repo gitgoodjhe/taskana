@@ -171,7 +171,7 @@ class DeleteTaskCommentAccTest {
   void should_FailToDeleteTaskComment_When_CommentIdDoesNotExist() throws Exception {
 
     ThrowingCallable call = () -> taskService.deleteTaskComment("non existing task comment id");
-    TaskCommentNotFoundException e = catchThrowableOfType(TaskCommentNotFoundException.class,call);
+    TaskCommentNotFoundException e = catchThrowableOfType(TaskCommentNotFoundException.class, call);
     assertThat(e.getTaskCommentId()).isEqualTo("non existing task comment id");
   }
 }
