@@ -2050,7 +2050,6 @@ class TaskControllerIntTest {
     }
 
     @TestFactory
-    @Disabled
     Stream<DynamicTest> should_ReturnFailedTasks_When_TransferringTasks() {
 
       Iterator<Pair<Boolean, String>> iterator =

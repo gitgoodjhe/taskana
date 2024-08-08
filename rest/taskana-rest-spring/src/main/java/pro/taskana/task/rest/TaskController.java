@@ -1005,7 +1005,7 @@ public class TaskController {
   @PostMapping(path = RestEndpoints.URL_TRANSFER_WORKBASKET_ID)
   @Transactional(rollbackFor = Exception.class)
   public ResponseEntity<BulkOperationResultsRepresentationModel> transferTasks(
-      @PathVariable String workbasketId,
+      @PathVariable("workbasketId") String workbasketId,
       @RequestBody TransferTaskRepresentationModel transferTaskRepresentationModel)
       throws NotAuthorizedOnWorkbasketException, WorkbasketNotFoundException {
     List<String> taskIds = transferTaskRepresentationModel.getTaskIds();
